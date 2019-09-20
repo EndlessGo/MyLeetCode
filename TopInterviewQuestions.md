@@ -1,8 +1,6 @@
 [TOC]
 
-
-
-# Array
+# Top Interview Questions
 
 ## 1. Two Sum
 
@@ -70,7 +68,7 @@ public:
 };
 ```
 
-# Linked List
+
 
 ## 2. Add Two Numbers
 
@@ -176,10 +174,6 @@ public:
     }
 };
 ```
-
-
-
-# String
 
 ## 14. Longest Common Prefix
 
