@@ -347,3 +347,76 @@ public:
 };
 ```
 
+
+
+## 125. Valid Palindrome
+
+Easy
+
+Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+
+**Note:** For the purpose of this problem, we define empty string as valid palindrome.
+
+**Example 1:**
+
+```
+Input: "A man, a plan, a canal: Panama"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: "race a car"
+Output: false
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        if (s.empty()) return true;
+        int left = 0, right = s.length()-1;
+        while(left < right)
+        {
+            while( !isAlphanumeric(s[left]) && left < right)
+                ++left;                
+            while( !isAlphanumeric(s[right]) && left < right)
+                --right;
+            if (tolower(s[left]) != tolower(s[right]))
+                return false;
+            ++left;
+            --right;
+        }
+        return true;
+    }
+private:
+    bool isAlphanumeric(char ch)
+    {
+        return (tolower(ch) >= 'a' && tolower(ch) <= 'z') || (ch >= '0'&& ch <= '9');
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    bool isPalindrome(string s) {
+    // Move 2 pointers from each end until they collide
+    for (int i = 0, j = s.size() - 1; i < j; i++, j--) {    
+        // Increment left pointer if not alphanumeric
+        while (isalnum(s[i]) == false && i < j) i++;    
+        // Decrement right pointer if no alphanumeric
+        while (isalnum(s[j]) == false && i < j) j--; 
+        // Exit and return error if not match
+        if (toupper(s[i]) != toupper(s[j])) return false; 
+    }
+    return true;
+}
+};
+```
+
