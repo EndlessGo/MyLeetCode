@@ -70,6 +70,98 @@ public:
 };
 ```
 
+## 27. Remove Element
+
+Easy
+
+Given an array *nums* and a value *val*, remove all instances of that value [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) and return the new length.
+
+Do not allocate extra space for another array, you must do this by **modifying the input array in-place** with O(1) extra memory.
+
+The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+
+**Example 1:**
+
+```
+Given nums = [3,2,2,3], val = 3,
+
+Your function should return length = 2, with the first two elements of nums being 2.
+
+It doesn't matter what you leave beyond the returned length.
+```
+
+**Example 2:**
+
+```
+Given nums = [0,1,2,2,3,0,4,2], val = 2,
+
+Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
+
+Note that the order of those five elements can be arbitrary.
+
+It doesn't matter what values are set beyond the returned length.
+```
+
+**Clarification:**
+
+Confused why the returned value is an integer but your answer is an array?
+
+Note that the input array is passed in by **reference**, which means modification to the input array will be known to the caller as well.
+
+Internally you can think of this:
+
+```
+// nums is passed in by reference. (i.e., without making a copy)
+int len = removeElement(nums, val);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i < len; i++) {
+    print(nums[i]);
+}
+```
+
+**Solution 1:**  disorder
+
+```c++
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int left = 0, right = nums.size()-1;
+        while(left <= right)
+        {
+            if(nums[left] == val)
+                swap(nums[left], nums[right--]);
+            else
+                ++left;
+        }
+        return left;
+    }
+};
+```
+
+**Solution 2:** order
+
+```c++
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int size = nums.size(), count = 0;
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i] == val)
+                ++count;
+            else
+            {
+                if (count)
+                    nums[i-count] = nums[i];
+            }
+        }
+        return size-count;
+    }
+};
+```
+
 
 
 ## 48. Rotate Image
@@ -192,6 +284,63 @@ public:
             digits.insert(digits.begin(), carry);
         }
         return digits;
+    }
+};
+```
+
+
+
+## 283. Move Zeroes
+
+Easy
+
+Given an array `nums`, write a function to move all `0`'s to the end of it while maintaining the relative order of the non-zero elements.
+
+**Example:**
+
+```
+Input: [0,1,0,3,12]
+Output: [1,3,12,0,0]
+```
+
+**Note**:
+
+1. You must do this **in-place** without making a copy of the array.
+2. Minimize the total number of operations.
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int size = nums.size(), count = 0;
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i] == 0)
+                ++count;
+            else
+                if (count)
+                    swap(nums[i-count], nums[i]);
+        }
+        return;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int zeroStart = 0, size = nums.size();//[0, zeroStart) [zeroStart,size)
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i])
+                swap(nums[i], nums[zeroStart++]);
+        }
+        return;
     }
 };
 ```

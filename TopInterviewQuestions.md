@@ -590,3 +590,60 @@ public:
 };
 ```
 
+
+
+## 283. Move Zeroes
+
+Easy
+
+Given an array `nums`, write a function to move all `0`'s to the end of it while maintaining the relative order of the non-zero elements.
+
+**Example:**
+
+```
+Input: [0,1,0,3,12]
+Output: [1,3,12,0,0]
+```
+
+**Note**:
+
+1. You must do this **in-place** without making a copy of the array.
+2. Minimize the total number of operations.
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int size = nums.size(), count = 0;
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i] == 0)
+                ++count;
+            else
+                if (count)
+                    swap(nums[i-count], nums[i]);
+        }
+        return;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int zeroStart = 0, size = nums.size();//[0, zeroStart) [zeroStart,size)
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i])
+                swap(nums[i], nums[zeroStart++]);
+        }
+        return;
+    }
+};
+```
+
