@@ -175,6 +175,8 @@ public:
 };
 ```
 
+
+
 ## 14. Longest Common Prefix
 
 Easy
@@ -275,6 +277,8 @@ public:
 };
 ```
 
+
+
 ## 48. Rotate Image
 
 Medium
@@ -349,6 +353,130 @@ public:
 
 
 
+## 66. Plus One
+
+Easy
+
+Given a **non-empty** array of digits representing a non-negative integer, plus one to the integer.
+
+The digits are stored such that the most significant digit is at the head of the list, and each element in the array contain a single digit.
+
+You may assume the integer does not contain any leading zero, except the number 0 itself.
+
+**Example 1:**
+
+```
+Input: [1,2,3]
+Output: [1,2,4]
+Explanation: The array represents the integer 123.
+```
+
+**Example 2:**
+
+```
+Input: [4,3,2,1]
+Output: [4,3,2,2]
+Explanation: The array represents the integer 4321.
+```
+
+```c++
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        //vector<int> res;
+        int size = digits.size();
+        int carry = 1;
+        for (int i = size - 1; i >= 0; --i)
+        {
+            int sum = digits[i] + carry;
+            digits[i] = sum % 10;
+            carry = sum / 10;
+        }
+        if (carry)
+        {
+            digits.insert(digits.begin(), carry);
+        }
+        return digits;
+    }
+};
+```
+
+
+
+## 69. Sqrt(x)
+
+Easy
+
+Implement `int sqrt(int x)`.
+
+Compute and return the square root of *x*, where *x* is guaranteed to be a non-negative integer.
+
+Since the return type is an integer, the decimal digits are truncated and only the integer part of the result is returned.
+
+**Example 1:**
+
+```
+Input: 4
+Output: 2
+```
+
+**Example 2:**
+
+```
+Input: 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since 
+             the decimal part is truncated, 2 is returned.
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    int mySqrt(int x) {
+        //O(n) time complexity
+        if (!x) return 0;
+        int i = 1;
+        for (; i <= x/2; ++i)
+        {
+            if (i <= x/i && (i+1) > x/(i+1))
+                break;
+        }
+        return i;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    int mySqrt(int x) {
+    	//O(logn) time complexity
+        if (!x) return 0;
+        int left = 1, right = x/2;
+        while (true) 
+        {
+            int mid = left + (right-left)/2;
+            if (mid > x/mid)
+            {
+                right = mid - 1;
+            }
+            else 
+            {
+                if (mid+1 > x/(mid + 1))
+                    return mid;
+                left = mid + 1;
+            }
+        }
+    }
+};
+```
+
+
+
 ## 125. Valid Palindrome
 
 Easy
@@ -417,6 +545,48 @@ public:
     }
     return true;
 }
+};
+```
+
+
+
+## 136. Single Number
+
+Easy
+
+Given a **non-empty** array of integers, every element appears *twice* except for one. Find that single one.
+
+**Note:**
+
+Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+
+**Example 1:**
+
+```
+Input: [2,2,1]
+Output: 1
+```
+
+**Example 2:**
+
+```
+Input: [4,1,2,1,2]
+Output: 4
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int res = 0;
+        for (auto num: nums)
+        {
+            res ^= num;
+        }
+        return res;
+    }
 };
 ```
 
