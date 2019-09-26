@@ -347,6 +347,46 @@ public:
 
 
 
+## 739. Daily Temperatures
+
+Medium
+
+Given a list of daily temperatures `T`, return a list such that, for each day in the input, tells you how many days you would have to wait until a warmer temperature. If there is no future day for which this is possible, put `0` instead.
+
+For example, given the list of temperatures `T = [73, 74, 75, 71, 69, 72, 76, 73]`, your output should be `[1, 1, 4, 2, 1, 1, 0, 0]`.
+
+**Note:** The length of `temperatures` will be in the range `[1, 30000]`. Each temperature will be an integer in the range `[30, 100]`.
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        int size = T.size();
+        vector<int> res(size, 0);
+        vector<int> next(101, INT_MAX);//next[i] means i temperatures appear first index in T reverse order
+        for (int i = size - 1; i >= 0; --i)
+        {
+            int warm_index = INT_MAX;
+            for (int j = T[i] + 1; j <= 100; ++j)
+            {
+                if (next[j] < warm_index)
+                {
+                    warm_index = next[j];
+                }
+            }
+            if (warm_index < INT_MAX)
+                res[i] = warm_index - i;
+            next[T[i]] = i;
+        }
+        return res;
+    }
+};
+```
+
+
+
 # Linked List
 
 ## 2. Add Two Numbers
