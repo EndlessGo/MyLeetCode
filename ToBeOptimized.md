@@ -12,4 +12,14 @@
 
 # To Be Optimized
 
+## 496. Next Greater Element I
+
+## 503. Next Greater Element II
+
 ## 739. Daily Temperatures
+
+
+
+# Doubt
+
+## 503. Next Greater Element II
