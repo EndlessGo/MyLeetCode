@@ -884,6 +884,118 @@ public:
 };
 ```
 
+## 137. Single Number II
+
+Medium
+
+Given a **non-empty** array of integers, every element appears *three* times except for one, which appears exactly once. Find that single one.
+
+**Note:**
+
+Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+
+**Example 1:**
+
+```
+Input: [2,2,3,2]
+Output: 3
+```
+
+**Example 2:**
+
+```
+Input: [0,1,0,1,0,1,99]
+Output: 99
+```
+
+**Solution:** 
+
+using extra memory
+
+```c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {        
+        if(nums.empty()) return 0;
+        unordered_map<int,int> record;
+        int size = nums.size();
+        for(int i = 0; i < size; ++i)
+        {
+            record[nums[i]]++;//default value = 0
+        }
+        auto iter = record.begin();
+        for(; iter != record.end(); ++iter)
+            if(iter->second == 1)
+                break;
+        return iter->first;
+    }
+};
+```
+
+**Improved:**
+
+```c++
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {        
+        int x1 = 0, x2 = 0, mask = 0;
+        int size = nums.size();
+        for(int i = 0; i < size; ++i)
+        {
+            x2 ^= x1 & nums[i];
+            x1 ^= nums[i];
+            mask = ~(x2 & x1);
+            x2 &= mask;
+            x1 &= mask;
+        }
+        return x2|x1;
+    }
+};
+```
+
+
+
+## 260. Single Number III
+
+Medium
+
+Given an array of numbers `nums`, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.
+
+**Example:**
+
+```
+Input:  [1,2,1,3,2,5]
+Output: [3,5]
+```
+
+**Note**:
+
+1. The order of the result is not important. So in the above example, `[5, 3]` is also correct.
+2. Your algorithm should run in linear runtime complexity. Could you implement it using only constant space complexity?
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        int diff = accumulate(nums.begin(), nums.end(), 0, bit_xor<int>());
+        diff &= -diff;
+        vector<int> res{0,0};
+        for (auto num: nums)
+        {
+            if (num & diff)
+                res[0] ^= num;
+            else
+                res[1] ^= num;
+        }
+        return res;
+    }
+};
+```
+
+
+
 ## 389. Find the Difference
 
 Easy
