@@ -397,6 +397,81 @@ public:
 
 
 
+## 167. Two Sum II - Input array is sorted
+
+Easy
+
+Given an array of integers that is already **sorted in ascending order**, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2.
+
+**Note:**
+
+- Your returned answers (both index1 and index2) are not zero-based.
+- You may assume that each input would have *exactly* one solution and you may not use the *same* element twice.
+
+**Example:**
+
+```
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+Explanation: The sum of 2 and 7 is 9. Therefore index1 = 1, index2 = 2.
+```
+
+**Solution 1:** binary search
+
+```c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {        
+        vector<int> res;
+        auto ibegin = numbers.begin(), iend = numbers.end();
+        int size = numbers.size();
+        for (int i = 0; i < size; ++i)
+        {
+            if (numbers[i] > target/2)//optimized to exit
+                break;
+            if (std::binary_search(ibegin, iend, target-numbers[i]))
+            {
+                auto itarget = std::upper_bound(ibegin, iend, target-numbers[i]);//upper_bound avoid case [0,0,1,2] target 0, lower_bound find the first 0 twice
+                res.push_back(i+1);//not zero-based, plus 1
+                res.push_back(itarget-1-ibegin+1);
+                break;
+            }
+        }
+        return res;
+    }
+};
+```
+
+**Solution 2:** two pointers
+
+```c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {        
+        vector<int> res;
+        int left = 0, right = nums.size()-1;        
+        while(left < right)
+        {
+            if(nums[left] + nums[right] == target)
+            {
+                res.push_back(left+1);
+                res.push_back(right+1);
+                break;                
+            }
+            else if (nums[left] + nums[right] < target)
+                ++left;
+            else //nums[left] + nums[right] > target
+                --right;
+        }
+        return res;
+    }
+};
+```
+
+
+
 ## 283. Move Zeroes
 
 Easy
