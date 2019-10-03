@@ -397,6 +397,127 @@ public:
 
 
 
+## 73. Set Matrix Zeroes
+
+Medium
+
+Given a *m* x *n* matrix, if an element is 0, set its entire row and column to 0. Do it [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm).
+
+**Example 1:**
+
+```
+Input: 
+[
+  [1,1,1],
+  [1,0,1],
+  [1,1,1]
+]
+Output: 
+[
+  [1,0,1],
+  [0,0,0],
+  [1,0,1]
+]
+```
+
+**Example 2:**
+
+```
+Input: 
+[
+  [0,1,2,0],
+  [3,4,5,2],
+  [1,3,1,5]
+]
+Output: 
+[
+  [0,0,0,0],
+  [0,4,5,0],
+  [0,3,1,0]
+]
+```
+
+**Follow up:**
+
+- A straight forward solution using O(*m**n*) space is probably a bad idea.
+- A simple improvement uses O(*m* + *n*) space, but still not the best solution.
+- Could you devise a constant space solution?
+
+**Solution 1:** O(m+n) space
+
+```c++
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        if (matrix.empty()) return;
+        int m = matrix.size();
+        int n = matrix[0].size();
+        //O(m+n) space
+        set<int> rowSet, colSet;
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if(!matrix[i][j])
+                {
+                    rowSet.insert(i);
+                    colSet.insert(j);
+                }
+            }
+        }
+        ;
+        for(auto row: rowSet)
+        {
+            vector<int> rowVec(n,0);
+            matrix[row].swap(rowVec);
+        }            
+        for(auto col: colSet)
+        {
+            for (int i = 0; i < m; ++i)
+            {
+                matrix[i][col] = 0;
+            }
+        }
+        return;
+    }
+};
+```
+
+**Improve:** O(1) space
+
+```c++
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        if (matrix.empty()) return;
+        int m = matrix.size(), n = matrix[0].size();
+        //O(1) space
+        bool col0 = false;//let matrix[0][0] represents row 0 state, col0 represents col 0 state
+        for (int i = 0; i < m; ++i)
+        {
+            if (!matrix[i][0]) col0 = true;
+            for (int j = 1; j < n; ++j)
+            {                
+                if(!matrix[i][j])
+                    matrix[i][0] = matrix[0][j] = 0;
+            }
+        }
+        for (int i = m-1; i >= 0; --i)
+        {            
+            for (int j = n-1; j >= 1; --j)
+            {                
+                if(!matrix[i][0] || !matrix[0][j])
+                    matrix[i][j] = 0;
+            }
+            if (col0) matrix[i][0] = 0;
+        }
+        return;
+    }
+};
+```
+
+
+
 ## 167. Two Sum II - Input array is sorted
 
 Easy
@@ -1515,6 +1636,96 @@ public:
                 left = mid + 1;
             }
         }
+    }
+};
+```
+
+
+
+# Tree
+
+## 559. Maximum Depth of N-ary Tree
+
+Easy
+
+Given a n-ary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+For example, given a `3-ary` tree:
+
+![img](https://assets.leetcode.com/uploads/2018/10/12/narytreeexample.png)
+
+ 
+
+We should return its max depth, which is 3.
+
+**Note:**
+
+1. The depth of the tree is at most `1000`.
+2. The total number of nodes is at most `5000`.
+
+**Solution 1:** BFS
+
+```c++
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> children;
+
+    Node() {}
+
+    Node(int _val, vector<Node*> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Solution {
+public:
+    int maxDepth(Node* root) {
+        if (!root) return 0;
+        queue<Node*> layer;
+        layer.push(root);
+        int depth = 0;
+        while(!layer.empty())
+        {      
+            ++depth;
+            int size = layer.size();
+            for (int i = 0; i < size; ++i)
+            {
+                Node* node = layer.front();
+                layer.pop();
+                for (auto* ch: node->children)
+                {
+                    if (ch)
+                        layer.push(ch);
+                }
+            }
+        }
+        return depth;
+    }
+};
+```
+
+**Solution 2:** DFS
+
+```c++
+class Solution {
+public:
+    int maxDepth(Node* root) {
+        if (!root) return 0;
+        int depth = 0;
+        for(auto *child: root->children)
+        {
+            if(child)
+            {
+                depth = max(depth, maxDepth(child));                
+            }
+        }
+        return depth+1;
     }
 };
 ```
