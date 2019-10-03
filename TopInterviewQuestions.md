@@ -523,6 +523,113 @@ public:
 
 
 
+## 53. Maximum Subarray
+
+Easy
+
+Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+
+**Example:**
+
+```
+Input: [-2,1,-3,4,-1,2,1,-5,4],
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+```
+
+**Follow up:**
+
+If you have figured out the O(*n*) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+
+**Solution1:** iterative
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        //!nums.empty() always success
+        int max_sum = INT_MIN, cur_sum = 0;
+        for (auto num : nums)
+        {
+            if (cur_sum < 0)
+                cur_sum = max(cur_sum, num);
+            else
+                cur_sum += num;
+            max_sum = max(cur_sum, max_sum);
+        }
+        return max_sum;
+    }
+};
+```
+
+**Solution2:** dp
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int size = nums.size(), res = INT_MIN;
+        vector<int> dp(size+1, INT_MIN);//dp[i] means the maximum subarray ending with nums[i-1];
+        for (int i = 1; i <= size; ++i)
+        {
+            dp[i] = dp[i-1] >= 0 ? dp[i-1] + nums[i-1] : max(dp[i-1], nums[i-1]);
+            res = max(res, dp[i]);
+        }
+        return res;
+    }
+};
+```
+
+**Improve**: divide and conquer
+
+
+
+## 55. Jump Game
+
+Medium
+
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
+
+**Example 1:**
+
+```
+Input: [2,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+```
+
+**Example 2:**
+
+```
+Input: [3,2,1,0,4]
+Output: false
+Explanation: You will always arrive at index 3 no matter what. Its maximum
+             jump length is 0, which makes it impossible to reach the last index.
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int last = nums.size()-1;
+        for (int i = last; i >= 0; --i)
+        {
+            if (i+nums[i] >= last)
+                last = i;        
+        }
+        return last == 0;
+    }
+};
+```
+
+
+
 ## 66. Plus One
 
 Easy
