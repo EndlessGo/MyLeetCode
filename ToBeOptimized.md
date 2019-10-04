@@ -29,3 +29,9 @@
 ## 137. Single Number II
 
 ## 503. Next Greater Element II
+
+
+
+# Rethink
+
+## 310. Minimum Height Trees

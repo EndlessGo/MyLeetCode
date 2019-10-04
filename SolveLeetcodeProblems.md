@@ -1730,3 +1730,101 @@ public:
 };
 ```
 
+# Graph
+
+## 310. Minimum Height Trees
+
+Medium
+
+For an undirected graph with tree characteristics, we can choose any node as the root. The result graph is then a rooted tree. Among all possible rooted trees, those with minimum height are called minimum height trees (MHTs). Given such a graph, write a function to find all the MHTs and return a list of their root labels.
+
+**Format**
+The graph contains `n` nodes which are labeled from `0` to `n - 1`. You will be given the number `n` and a list of undirected `edges` (each edge is a pair of labels).
+
+You can assume that no duplicate edges will appear in `edges`. Since all edges are undirected, `[0, 1]` is the same as `[1, 0]` and thus will not appear together in `edges`.
+
+**Example 1 :**
+
+```
+Input: n = 4, edges = [[1, 0], [1, 2], [1, 3]]
+
+        0
+        |
+        1
+       / \
+      2   3 
+
+Output: [1]
+```
+
+**Example 2 :**
+
+```
+Input: n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
+
+     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5 
+
+Output: [3, 4]
+```
+
+**Note**:
+
+- According to the [definition of tree on Wikipedia](https://en.wikipedia.org/wiki/Tree_(graph_theory)): “a tree is an undirected graph in which any two vertices are connected by *exactly* one path. In other words, any connected graph without simple cycles is a tree.”
+- The height of a rooted tree is the number of edges on the longest downward path between the root and a leaf.
+
+**Solution: **BFS
+
+```c++
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        vector< vector<int> > adjList(n);
+        vector<int> degree(n, 0);
+        for(auto& e: edges)
+        {
+            adjList[e[0]].push_back(e[1]);
+            adjList[e[1]].push_back(e[0]);
+            ++degree[e[0]];
+            ++degree[e[1]];
+        }
+        
+        queue<int> leavesQue;        
+        for(int i = 0; i < n; ++i)
+        {
+            if(degree[i] <= 1)// degree[i] <= 1, i think graph is connected so only use degree[i]==1! But think about the case only have 1 root so the root degree is 0 and put it in leavesQue!
+                leavesQue.push(i);
+        }
+        
+        while(n > 2)
+        {
+            int leavesNum = leavesQue.size();
+            n -= leavesNum;
+            for (int i = 0; i < leavesNum; ++i)
+            {
+                int node = leavesQue.front();
+                leavesQue.pop();
+                for(auto adjNode: adjList[node])
+                {
+                    if (--degree[adjNode] == 1)
+                        leavesQue.push(adjNode);
+                }
+            }
+        }
+        
+        vector<int> res;
+        while(!leavesQue.empty())
+        {
+            res.push_back(leavesQue.front());
+            leavesQue.pop();
+        }
+        return res;
+    }
+};
+```
+
