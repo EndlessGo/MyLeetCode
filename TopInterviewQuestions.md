@@ -388,6 +388,137 @@ public:
 
 
 
+## 20. Valid Parentheses
+
+Easy
+
+Given a string containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.
+
+An input string is valid if:
+
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+
+Note that an empty string is also considered valid.
+
+**Example 1:**
+
+```
+Input: "()"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: "()[]{}"
+Output: true
+```
+
+**Example 3:**
+
+```
+Input: "(]"
+Output: false
+```
+
+**Example 4:**
+
+```
+Input: "([)]"
+Output: false
+```
+
+**Example 5:**
+
+```
+Input: "{[]}"
+Output: true
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> res;
+        int size = s.size();
+        for(int i = 0; i < size; ++i)
+        {
+            if(s[i] == ')' || s[i] == ']' || s[i] == '}')
+            {
+                if (res.empty())
+                    return false;
+                char top;
+                if(s[i] == ')')
+                    top = '(';
+                else if(s[i] == '}')
+                    top = '{';
+                else// if(s[i] == ']')
+                    top = '[';
+                if(res.top() != top)
+                    return false;
+                res.pop();
+            }       
+            else
+                res.push(s[i]);
+        }
+        return res.empty();
+    }
+};
+```
+
+
+
+## 22. Generate Parentheses
+
+Medium
+
+Given *n* pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given *n* = 3, a solution set is:
+
+```
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+```
+
+**Solution:** backtrack
+
+```c++
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        backtrack(res, "", n, 0);
+        return res;
+    }
+private:
+    void backtrack(vector<string>& res, string str, int n, int m)
+    {
+        //use two integers to count the remaining left parenthesis (n) and the right parenthesis (m) to be added
+        if (!n && !m)
+        {
+            res.push_back(str);
+            return;
+        }
+        if (m > 0)
+            backtrack(res, str+")", n, m-1);
+        if (n > 0)
+            backtrack(res, str+"(", n-1, m+1);
+        return;
+    }
+};
+```
+
+
+
 ## 28. Implement strStr()
 
 Easy

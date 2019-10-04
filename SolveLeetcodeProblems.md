@@ -1315,6 +1315,205 @@ public:
 };
 ```
 
+# Stack
+
+## 20. Valid Parentheses
+
+Easy
+
+Given a string containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.
+
+An input string is valid if:
+
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+
+Note that an empty string is also considered valid.
+
+**Example 1:**
+
+```
+Input: "()"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: "()[]{}"
+Output: true
+```
+
+**Example 3:**
+
+```
+Input: "(]"
+Output: false
+```
+
+**Example 4:**
+
+```
+Input: "([)]"
+Output: false
+```
+
+**Example 5:**
+
+```
+Input: "{[]}"
+Output: true
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> res;
+        int size = s.size();
+        for(int i = 0; i < size; ++i)
+        {
+            if(s[i] == ')' || s[i] == ']' || s[i] == '}')
+            {
+                if (res.empty())
+                    return false;
+                char top;
+                if(s[i] == ')')
+                    top = '(';
+                else if(s[i] == '}')
+                    top = '{';
+                else// if(s[i] == ']')
+                    top = '[';
+                if(res.top() != top)
+                    return false;
+                res.pop();
+            }       
+            else
+                res.push(s[i]);
+        }
+        return res.empty();
+    }
+};
+```
+
+
+
+## 844. Backspace String Compare
+
+Easy
+
+Given two strings `S` and `T`, return if they are equal when both are typed into empty text editors. `#` means a backspace character.
+
+**Example 1:**
+
+```
+Input: S = "ab#c", T = "ad#c"
+Output: true
+Explanation: Both S and T become "ac".
+```
+
+**Example 2:**
+
+```
+Input: S = "ab##", T = "c#d#"
+Output: true
+Explanation: Both S and T become "".
+```
+
+**Example 3:**
+
+```
+Input: S = "a##c", T = "#a#c"
+Output: true
+Explanation: Both S and T become "c".
+```
+
+**Example 4:**
+
+```
+Input: S = "a#c", T = "b"
+Output: false
+Explanation: S becomes "c" while T becomes "b".
+```
+
+**Note**:
+
+1. `1 <= S.length <= 200`
+2. `1 <= T.length <= 200`
+3. `S` and `T` only contain lowercase letters and `'#'` characters.
+
+**Follow up:**
+
+- Can you solve it in `O(N)` time and `O(1)` space?
+
+**Solution:** O(M+N) time and O(M+N) space
+
+```c++
+class Solution {
+public:
+    bool backspaceCompare(string S, string T) {
+        return buildFinalString(S) == buildFinalString(T);
+    }
+    string buildFinalString(string str)
+    {
+        stack<char> stk;
+        int size = str.size();
+        for(int i = 0; i < size; ++i)
+        {
+            if(str[i] == '#')
+            {
+                if(!stk.empty())
+                    stk.pop();
+            }
+            else
+                stk.push(str[i]);
+        }
+        string res;
+        while(!stk.empty())
+        {
+            res.push_back(stk.top());
+            stk.pop();
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
+
+**Improve: ** two pointers iterate through the string in reverse, O(M+N) time and O(1) space.
+
+```c++
+class Solution {
+public:
+    bool backspaceCompare(string S, string T) {
+        int i = S.length() - 1, j = T.length() - 1;
+        int skipS = 0, skipT = 0;
+        while (i >= 0 || j >= 0) { // While there may be chars in build(S) or build (T)
+            while (i >= 0) { // Find position of next possible char in build(S)
+                if (S[i] == '#') {++skipS; --i;}
+                else if (skipS > 0) {--skipS; --i;}
+                else break;
+            }
+            while (j >= 0) { // Find position of next possible char in build(T)
+                if (T[j] == '#') {++skipT; --j;}
+                else if (skipT > 0) {--skipT; --j;}
+                else break;
+            }
+            // If two actual characters are different
+            if (i >= 0 && j >= 0 && S[i] != T[j])
+                return false;
+            // If expecting to compare char vs nothing
+            if ((i >= 0) != (j >= 0))
+                return false;
+            --i; --j;
+        }
+        return true;        
+    }
+};
+```
+
 
 
 # Bit Manipulation
@@ -1730,6 +1929,113 @@ public:
 };
 ```
 
+
+
+## 653. Two Sum IV - Input is a BST
+
+Easy
+
+Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.
+
+**Example 1:**
+
+```
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+Output: True
+```
+
+**Example 2:**
+
+```
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+Output: False
+```
+
+**Solution 1:** DFS with hash set and can use BFS too.
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool findTarget(TreeNode* root, int k) {
+        unordered_set<int> record;
+        return findTarget(root, k, record);
+    }
+private:
+    bool findTarget(TreeNode* node, int k, unordered_set<int>& record) {
+        if (!node) return false;
+        if (record.find(k - node->val) != record.end())
+            return true;
+        record.insert(node->val);
+        return findTarget(node->left, k, record) || findTarget(node->right, k, record);            
+    }
+};
+```
+
+**Solution 2:** inorder traversal with vector and use 167. input array is sorted
+
+```c++
+class Solution {
+public:
+    bool findTarget(TreeNode* root, int k) {
+        if (!root) return false;
+        vector<int> record;
+        inOrder(root, record);
+        return twoSum(record, k);
+    }
+private:
+    void inOrder(TreeNode* node, vector<int>& record) {
+        if (!node) return;
+        if(node->left)
+            inOrder(node->left, record);
+        record.push_back(node->val);
+        if(node->right)
+            inOrder(node->right, record);
+        return;
+    }
+    bool twoSum(vector<int>& nums, int target) {
+        int left = 0, right = nums.size()-1;        
+        while(left < right)
+        {
+            int sum = nums[left] + nums[right];
+            if(sum == target)
+                return true;
+            else if (sum < target)
+                ++left;
+            else
+                --right;
+        }
+        return false;
+    }
+};
+```
+
+
+
 # Graph
 
 ## 310. Minimum Height Trees
@@ -1824,6 +2130,54 @@ public:
             leavesQue.pop();
         }
         return res;
+    }
+};
+```
+
+# Backtracking
+
+## 22. Generate Parentheses
+
+Medium
+
+Given *n* pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given *n* = 3, a solution set is:
+
+```
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+```
+
+**Solution:** backtrack
+
+```c++
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        backtrack(res, "", n, 0);
+        return res;
+    }
+private:
+    void backtrack(vector<string>& res, string str, int n, int m)
+    {
+        //use two integers to count the remaining left parenthesis (n) and the right parenthesis (m) to be added
+        if (!n && !m)
+        {
+            res.push_back(str);
+            return;
+        }
+        if (m > 0)
+            backtrack(res, str+")", n, m-1);
+        if (n > 0)
+            backtrack(res, str+"(", n-1, m+1);
+        return;
     }
 };
 ```
