@@ -1788,6 +1788,81 @@ public:
 
 
 
+## 171. Excel Sheet Column Number
+
+Easy
+
+Given a column title as appear in an Excel sheet, return its corresponding column number.
+
+For example:
+
+```
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+```
+
+**Example 1:**
+
+```
+Input: "A"
+Output: 1
+```
+
+**Example 2:**
+
+```
+Input: "AB"
+Output: 28
+```
+
+**Example 3:**
+
+```
+Input: "ZY"
+Output: 701
+```
+
+**Solution 1**
+
+```c++
+class Solution {
+public:
+    int titleToNumber(string s) {
+        int size = s.size();
+        long long res = 0;
+        for(int i = 0; i < size; ++i)
+        {
+            res = 26*res + s[i]-'A'+1;
+        }
+        return (int)res;
+    }
+};
+```
+
+**Solution 2**
+
+```c++
+class Solution {
+public:
+    int titleToNumber(string s) {
+        int col = 0;
+        for(int i = s.length(); i > 0; i--) {
+            col += (s[i - 1] - 'A' + 1) * pow(26, (s.length() - i));
+        }
+        return col;
+    }
+};
+
+```
+
+
+
 ## 367. Valid Perfect Square
 
 Easy
@@ -2177,6 +2252,115 @@ private:
             backtrack(res, str+")", n, m-1);
         if (n > 0)
             backtrack(res, str+"(", n-1, m+1);
+        return;
+    }
+};
+```
+
+
+
+## 46. Permutations
+
+Medium
+
+Given a collection of **distinct** integers, return all possible permutations.
+
+**Example:**
+
+```
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {        
+        vector<vector<int>> res;
+        if (nums.empty()) return res;
+        permute(res, nums, 0);       
+        return res;
+    }
+private:
+    void permute(vector<vector<int>> &res, vector<int>& nums, int begin)
+    {        
+        int size = nums.size();
+        if(begin == size)
+        {
+            res.push_back(nums);
+            return;
+        }
+        for(int i = begin; i < size; ++i)
+        {
+            swap(nums[begin], nums[i]);
+            permute(res, nums, begin+1);
+            swap(nums[begin], nums[i]);
+        }                
+        return;
+    }
+};
+```
+
+
+
+## 47. Permutations II
+
+Medium
+
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+**Example:**
+
+```
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> res;
+        if (nums.empty()) return res;
+        sort(nums.begin(), nums.end());//sort so no need second swap
+        permuteUnique(res, nums, 0);       
+        return res;
+    }
+private:
+    void permuteUnique(vector<vector<int>> &res, vector<int> nums, int begin)//not use vector<int>& nums
+    {        
+        int size = nums.size();
+        if(begin == size)
+        {
+            res.push_back(nums);
+            return;
+        }
+        for(int i = begin; i < size; ++i)
+        {
+            if(i == begin || nums[i] != nums[begin])
+            {
+                swap(nums[begin], nums[i]);
+                permuteUnique(res, nums, begin+1);
+                //swap(nums[begin], nums[i]);
+            }
+        }
         return;
     }
 };
