@@ -34,4 +34,8 @@
 
 # Rethink
 
+## 46. Permutations
+
+## 47. Permutations II
+
 ## 310. Minimum Height Trees
