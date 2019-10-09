@@ -388,6 +388,115 @@ public:
 
 
 
+## 17. Letter Combinations of a Phone Number
+
+Medium
+
+Given a string containing digits from `2-9` inclusive, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+![img](http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png)
+
+**Example:**
+
+```
+Input: "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+```
+
+**Note:**
+
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+
+**Solution 1:** push_back() and pop_back()
+
+```c++
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {        
+        result.clear();
+        if(digits.empty())  return result;
+        string s = "";
+        findCombination(digits, 0, s);
+        return result;
+    }
+    //temp中保存了从digits[0...index-1]翻译得到的一个字符串字母
+    //寻找和digits[index]匹配的字母，并翻译得到digits[0...index]
+    void findCombination(string& digits, int index, string& temp)
+    {
+        //cout<<"index="<<index<<endl;
+        if(index == digits.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+        string letters = record[digits[index]-'0'];
+        //cout<<letters<<endl;
+        int size = letters.size();
+        for(int i = 0; i < size; ++i)
+        {
+            //cout<<"i="<<i<<endl;
+            temp.push_back(letters[i]);
+            findCombination(digits, index+1, temp);
+            temp.pop_back();
+        }
+        return;
+    }
+private:
+    vector<string> record
+    {
+        "",//0
+        "",//1
+        "abc",
+        "def",
+        "ghi",
+        "jkl",
+        "mno",
+        "pqrs",
+        "tuv",
+        "wxyz",//9
+    };
+    vector<string> result;
+};
+```
+
+**Solution 2:** const string& temp, a little bit more memory because temp and temp+letter[i] are two different strings.
+
+```c++
+    vector<string> letterCombinations(string digits) {        
+        result.clear();
+        if(digits.empty())  return result;
+        //string s = "";
+        findCombination(digits, 0, "");
+        return result;
+    }
+    //temp中保存了从digits[0...index-1]翻译得到的一个字符串字母
+    //寻找和digits[index]匹配的字母，并翻译得到digits[0...index]
+    void findCombination(string& digits, int index, const string& temp)
+    {
+        //cout<<"index="<<index<<endl;
+        if(index == digits.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+        string letters = record[digits[index]-'0'];
+        //cout<<letters<<endl;
+        int size = letters.size();
+        for(int i = 0; i < size; ++i)
+        {
+            //cout<<"i="<<i<<endl;
+            //temp.push_back(letters[i]);
+            findCombination(digits, index+1, temp + letters[i]);
+            //temp.pop_back();
+        }
+        return;
+    }
+```
+
+
+
 ## 20. Valid Parentheses
 
 Easy
