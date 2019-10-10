@@ -2475,3 +2475,60 @@ private:
 };
 ```
 
+## 77. Combinations
+
+Medium
+
+Given two integers *n* and *k*, return all possible combinations of *k* numbers out of 1 ... *n*.
+
+**Example:**
+
+```
+Input: n = 4, k = 2
+Output:
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> combine(int n, int k) {
+        result.clear();
+        vector<int> ivec;
+        findCombination(n, k, 1, ivec);
+        return result;
+    }
+    //求解C(n,k), 当前已经找到的组合存储在ivec中，需要从index开始寻找新的元素
+    void findCombination(int n, int k, int index, vector<int>& ivec)
+    {
+        if(ivec.size() == k)
+        {
+            //cout<<"return, index="<<index<<endl;
+            result.push_back(ivec);
+            return;
+        }
+        //cout<<"index="<<index<<endl;
+        //还需要k-ivec.size()个元素，所以从[i...n]至少要包含k-ivec.size()个元素
+        for(int i = index; i <= n - (k-ivec.size()) + 1; ++i)
+        {
+            //cout<<"i="<<i<<endl;
+            ivec.push_back(i);
+            findCombination(n, k, i+1, ivec);
+            ivec.pop_back();
+        }
+        return;
+    }
+private:
+    vector<vector<int>> result;
+};
+```
+
