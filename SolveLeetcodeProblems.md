@@ -2389,7 +2389,73 @@ Output:
 ]
 ```
 
-**Solution**
+**Solution 1:** 含义清晰的版本
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        result.clear();
+        visited.clear();
+        visited.insert(visited.end(), nums.size(), false);
+        vector<int> temp;
+        findPermutations(nums, 0, temp);
+        return result;
+    }
+private:
+    //temp存储已经排列好的元素，这一轮访问nums中索引为index的元素
+    //取出nums[index]放到temp结尾，对nums中剩下未被访问过的元素继续进行全排列
+    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
+        if(temp.size() == nums.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            if(!visited[i])
+            {
+                visited[i] = true;
+                temp.push_back(nums[i]);
+                findPermutations(nums, i, temp);
+                temp.pop_back();
+                visited[i] = false;
+            }
+        }
+        return;
+    }
+    vector< vector<int> > result;
+    vector<bool> visited;
+};
+```
+
+**Solution 2:** 含义清晰的版本，对于index的另一种理解和修改。
+
+```c++
+    //temp中保存一个有index个元素的排列
+    //向这个排列的末尾添加第index+1个元素，获得一个有index+1个元素的排列
+    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
+        if(index == nums.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            if(!visited[i])
+            {
+                visited[i] = true;
+                temp.push_back(nums[i]);
+                findPermutations(nums, index+1, temp);
+                temp.pop_back();
+                visited[i] = false;
+            }
+        }
+        return;
+    }
+```
+
+**Solution 3:** 交换的版本
 
 ```c++
 class Solution {
@@ -2440,7 +2506,49 @@ Output:
 ]
 ```
 
-**Solution**
+**Solution 1:** 概念清晰，由46不重复的全排列，加上排序和相邻前置访问判断。
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        result.clear();
+        visited.clear();
+        visited.insert(visited.end(), nums.size(), false);
+        vector<int> temp;
+        sort(nums.begin(), nums.end());//关键
+        findPermutations(nums, 0, temp);
+        return result;
+    }
+private:
+    //temp中保存一个有index个元素的排列
+    //向这个排列的末尾添加第index+1个元素，获得一个有index+1个元素的排列
+    //回溯到本轮，继续添加下一个index+1元素时，若其和前置nums元素相等且前置未被访问过，说明可以直接跳过
+    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
+        if(index == nums.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            if(visited[i])  continue;
+            if(i > 0 && nums[i] == nums[i-1] && !visited[i-1])  continue;//关键!visited[i]
+            //ohter
+            visited[i] = true;
+            temp.push_back(nums[i]);
+            findPermutations(nums, index+1, temp);
+            temp.pop_back();
+            visited[i] = false;
+        }
+        return;
+    }
+    vector< vector<int> > result;
+    vector<bool> visited;
+};
+```
+
+**Solution 2:** 交换版本
 
 ```c++
 class Solution {
@@ -2474,6 +2582,8 @@ private:
     }
 };
 ```
+
+
 
 ## 77. Combinations
 
