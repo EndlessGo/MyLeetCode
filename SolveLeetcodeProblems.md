@@ -968,6 +968,248 @@ public:
 
 
 
+## 141. Linked List Cycle
+
+Easy
+
+Given a linked list, determine if it has a cycle in it.
+
+To represent a cycle in the given linked list, we use an integer `pos` which represents the position (0-indexed) in the linked list where tail connects to. If `pos` is `-1`, then there is no cycle in the linked list.
+
+ 
+
+**Example 1:**
+
+```
+Input: head = [3,2,0,-4], pos = 1
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+**Example 2:**
+
+```
+Input: head = [1,2], pos = 0
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+**Example 3:**
+
+```
+Input: head = [1], pos = -1
+Output: false
+Explanation: There is no cycle in the linked list.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+ 
+
+**Follow up:**
+
+Can you solve it using *O(1)* (i.e. constant) memory?
+
+**Solution 1:** normal find
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(!head || !head->next)
+            return false;
+        ListNode* slow = head, *fast = head;
+        while(fast && fast->next)
+        {            
+            slow = slow->next;
+            fast = fast->next->next;
+            if(slow == fast)
+                return true;            
+        }
+        return false;
+    }
+};
+```
+
+**Solution 2:** use dummy head
+
+```c++
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* dummyHead = new ListNode(-1);
+        dummyHead->next = head;
+        ListNode* fast, *slow;
+        fast = slow = dummyHead;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+};
+```
+
+## 142. Linked List Cycle II
+
+Medium
+
+Given a linked list, return the node where the cycle begins. If there is no cycle, return `null`.
+
+To represent a cycle in the given linked list, we use an integer `pos` which represents the position (0-indexed) in the linked list where tail connects to. If `pos` is `-1`, then there is no cycle in the linked list.
+
+**Note:** Do not modify the linked list.
+
+ 
+
+**Example 1:**
+
+```
+Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+**Example 2:**
+
+```
+Input: head = [1,2], pos = 0
+Output: tail connects to node index 0
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+**Example 3:**
+
+```
+Input: head = [1], pos = -1
+Output: no cycle
+Explanation: There is no cycle in the linked list.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+ 
+
+**Follow-up**:
+Can you solve it without using extra space?
+
+**Solution 1:** normal find use 141 solution, have math prove.
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode* dummyHead = new ListNode(-1);
+        dummyHead->next = head;
+        ListNode* fast, *slow;
+        fast = slow = dummyHead;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                break;
+        }
+        if(!fast || !fast->next)//no cycle
+            return NULL;
+        slow = dummyHead;//reset
+        while(slow != fast)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        return slow;
+    }
+};
+```
+
+**Solution 2:** Improved solution 1 in condition if find cycle.
+
+```c++
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode* dummyHead = new ListNode(-1);
+        dummyHead->next = head;
+        ListNode* fast, *slow, *entry;
+        fast = slow = entry = dummyHead;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+            {
+                while(slow != entry)
+                {
+                    slow = slow->next;
+                    entry = entry->next;
+                }
+                return entry;
+            }
+        }
+        return NULL;
+    }
+};
+```
+
+**Solution 3:** no dummy head.
+
+```c++
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if (!head || !head->next)
+            return NULL;
+
+        ListNode *slow  = head;
+        ListNode *fast  = head;
+        ListNode *entry = head;
+
+        while (fast->next && fast->next->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) {                      // there is a cycle
+                while(slow != entry) {               // found the entry location
+                    slow  = slow->next;
+                    entry = entry->next;
+                }
+                return entry;
+            }
+        }
+        return NULL;                                 // there has no cycle
+    }
+};
+```
+
+
+
 # String
 
 ## 8. String to Integer (atoi)
