@@ -70,6 +70,131 @@ public:
 };
 ```
 
+
+
+### 26. Remove Duplicates from Sorted Array
+
+Easy
+
+Given a sorted array *nums*, remove the duplicates [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) such that each element appear only *once* and return the new length.
+
+Do not allocate extra space for another array, you must do this by **modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm)** with O(1) extra memory.
+
+**Example 1:**
+
+```
+Given nums = [1,1,2],
+
+Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+
+It doesn't matter what you leave beyond the returned length.
+```
+
+**Example 2:**
+
+```
+Given nums = [0,0,1,1,1,2,2,3,3,4],
+
+Your function should return length = 5, with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
+
+It doesn't matter what values are set beyond the returned length.
+```
+
+**Clarification:**
+
+Confused why the returned value is an integer but your answer is an array?
+
+Note that the input array is passed in by **reference**, which means modification to the input array will be known to the caller as well.
+
+Internally you can think of this:
+
+```
+// nums is passed in by reference. (i.e., without making a copy)
+int len = removeDuplicates(nums);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i < len; i++) {
+    print(nums[i]);
+}
+```
+
+**Solution 1:**
+
+```c++
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int k = 0, size = nums.size();//nums[0...k) store appear once element
+        for(int i = 0; i < size; ++i)
+        {
+            if(i > 0 && nums[i] == nums[i-1])
+                continue;
+            nums[k++] = nums[i];
+        }
+        return k;
+    }
+};
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int size = nums.size();
+        if(size == 0 || size == 1) return size;
+        int k = 1;//nums[0...k) store appear once element
+        for(int i = 1; i < size; ++i)
+        {
+            if(nums[i] == nums[i-1])
+                continue;
+            nums[k++] = nums[i];
+        }
+        return k;
+    }
+};
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int k = 1, size = nums.size();//nums[0...k) store appear once element
+        for(int i = 1; i < size; ++i)
+        {
+            if(nums[i] != nums[i-1])
+            {
+                if(i != k)
+                    nums[k++] = nums[i];
+                else
+                    ++k;
+            }
+        }
+        return k;
+    }
+};
+```
+
+**Solution 2:**
+
+```c++
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int size = nums.size();
+        if(size == 0 || size == 1) return size;
+        int count = 0;
+        for(int i = 1; i < size; ++i)
+        {
+            if(nums[i] == nums[i-1])
+                ++count;
+            if(count)
+                nums[i-count] = nums[i];
+        }
+        return size-count;
+    }
+};
+```
+
+
+
 ## 27. Remove Element
 
 Easy
@@ -141,6 +266,28 @@ public:
 ```
 
 **Solution 2:** order
+
+```c++
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int k = 0, size = nums.size();//[0, k)
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i] != val)
+            {
+                if(i != k)
+                    nums[k++] = nums[i];//swap(nums[i], nums[k++]); //doesn't matter what left in new length
+                else
+                    ++k;//consider case that all elements in nums are not val
+            }
+        }
+        return k;
+    }
+};
+```
+
+**Solution 3:** order
 
 ```c++
 class Solution {
@@ -611,7 +758,7 @@ Output: [1,3,12,0,0]
 1. You must do this **in-place** without making a copy of the array.
 2. Minimize the total number of operations.
 
-**Solution:**
+**Solution :**
 
 ```c++
 class Solution {
@@ -631,7 +778,7 @@ public:
 };
 ```
 
-**Improve:**
+**Improve 1:**
 
 ```c++
 class Solution {
@@ -642,6 +789,28 @@ public:
         {
             if(nums[i])
                 swap(nums[i], nums[zeroStart++]);
+        }
+        return;
+    }
+};
+```
+
+**Improve 2:**
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int zeroStart = 0, size = nums.size();//[0, zeroStart) [zeroStart,size)
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i])
+            {
+                if(i != zeroStart)
+                    swap(nums[i], nums[zeroStart++]);
+                else
+                    ++zeroStart;
+            }
         }
         return;
     }
