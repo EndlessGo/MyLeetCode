@@ -72,6 +72,91 @@ public:
 
 
 
+## 11. Container With Most Water
+
+Medium
+
+Given *n* non-negative integers *a1*, *a2*, ..., *an* , where each represents a point at coordinate (*i*, *ai*). *n* vertical lines are drawn such that the two endpoints of line *i* is at (*i*, *ai*) and (*i*, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+
+**Note:** You may not slant the container and *n* is at least 2.
+
+ 
+
+![img](https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg)
+
+The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+ 
+
+**Example:**
+
+```
+Input: [1,8,6,2,5,4,8,3,7]
+Output: 49
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int l = 0, r = height.size()-1;
+        int shorter = min(height[l], height[r]);
+        int maxArea = (r-l)*shorter;
+        //compute max area in height[l...r]
+        while(l < r)
+        {
+            if(height[l] < height[r])
+            {
+                ++l;
+                if(height[l] > shorter)
+                {
+                    shorter = min(height[l], height[r]);
+                    maxArea = max(maxArea, (r-l)*shorter);
+                }
+                    
+            }
+            else
+            {
+                --r;
+                if(height[r] > shorter)
+                {
+                    shorter = min(height[l], height[r]);
+                    maxArea = max(maxArea, (r-l)*shorter);
+                }
+            }
+        }
+        return maxArea;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int l = 0, r = height.size()-1;
+        int maxArea = 0, shorter = 0;
+        //compute max area in height[l...r]
+        while(l < r)
+        {
+            shorter = min(height[l], height[r]);
+            maxArea = max(maxArea, (r-l)*shorter);
+            while(l < r && height[l] <= shorter)
+                ++l;
+            while(l < r && height[r] <= shorter)
+                --r;
+        }
+        return maxArea;
+    }
+};
+```
+
+
+
 ## 26. Remove Duplicates from Sorted Array
 
 Easy
@@ -982,6 +1067,116 @@ public:
         return res;
     }
 };
+```
+
+
+
+## 215. Kth Largest Element in an Array
+
+Medium
+
+Find the **k**th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+**Example 1:**
+
+```
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+```
+
+**Example 2:**
+
+```
+Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+```
+
+**Note:**
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+
+**Solution:** 
+
+```c++
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int n = nums.size();
+        int index = 0, start = 0, end = n-1;
+        while(true)
+        {
+            //the k'th largest index is n-1-(k-1) = n-k
+            index = Partition(nums, start, end);
+            /*for(auto num: nums)
+                cout<<num<<" ";
+                */
+            //cout<<endl;
+            if(index == n-k)
+                break;
+            else if(index < n-k)
+                start = index + 1;
+            else//if(index > n-k)
+                end = index - 1;            
+        }
+        return nums[index];
+    }
+private:
+    int Partition(vector<int>& nums, int start, int end)
+    {
+        if(start == end) return start;
+        //nums[start...small] < pivot && nums[big...end] >= pivot, nums[big-1] is pivot
+        int pivot = nums[start];
+        int small = start-1, big = end+1;
+        int i = start+1;
+        while(i < big)
+        {
+            if(nums[i] < pivot)
+                nums[++small] = nums[i++];
+            else
+                swap(nums[--big], nums[i]);
+        }
+        nums[big-1] = pivot;
+        return big-1;
+    }
+};
+```
+
+**Improve :**
+
+```c++
+    int Partition(vector<int>& nums, int left, int right)
+    {
+        int pivot = nums[left], l = left, r = right;
+        while(l <= r)
+        {
+            if(nums[l] > pivot && nums[r] < pivot)
+                swap(nums[l++], nums[r--]);
+            else if(nums[l] <= pivot)
+                ++l;
+            else//nums[r] >= pivot
+                --r;
+        }
+        swap(nums[r], nums[left]);
+        return r;
+    }
+
+    int Partition(vector<int>& nums, int l, int r) {	
+	int v = nums[l];
+	// arr[l+1...i) <= v; arr(j...r] >= v
+	int i = l + 1, j = r;
+	while (true) {
+		while (i <= r && nums[i] < v)
+			i++;
+		while (j >= l + 1 && nums[j] > v)
+			j--;
+		// 对于上面的两个边界的设定, 有的同学在课程的问答区有很好的回答:)
+		// 大家可以参考: http://coding.imooc.com/learn/questiondetail/4920.html
+		if (i > j)
+            break;
+		swap(nums[i++], nums[j--]);
+	}
+	swap(nums[l], nums[j]);
+	return j;
+}
 ```
 
 
