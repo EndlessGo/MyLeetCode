@@ -821,6 +821,96 @@ public:
 
 
 
+## 88. Merge Sorted Array
+
+Easy
+
+Given two sorted integer arrays *nums1* and *nums2*, merge *nums2* into *nums1* as one sorted array.
+
+**Note:**
+
+- The number of elements initialized in *nums1* and *nums2* are *m* and *n* respectively.
+- You may assume that *nums1* has enough space (size that is greater or equal to *m* + *n*) to hold additional elements from *nums2*.
+
+**Example:**
+
+```
+Input:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+Output: [1,2,2,3,5,6]
+```
+
+**Solution:** 
+
+```c++
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i = m - 1, j = n - 1, k = m+n-1;
+        while(i >= 0 || j >= 0)
+        {
+            if(i < 0)
+            {
+                while(j >= 0)
+                    nums1[k--] = nums2[j--];
+            }
+            else if(j < 0)
+            {
+                return;
+                /*
+                while(i >= 0)
+                    nums1[k--] = nums1[i--];
+                */
+            }
+            else
+            {                        
+                if(nums1[i] >= nums2[j])
+                    nums1[k--] = nums1[i--];
+                else
+                    nums1[k--] = nums2[j--];
+            }
+        }
+        return;
+    }
+};
+```
+
+**Improve:** 
+
+```c++
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i = m - 1, j = n - 1, k = m+n-1;
+        while(j >= 0)
+        {
+            if(i < 0)
+            {
+                copy(nums2.begin(), nums2.begin()+j+1, nums1.begin());
+                return;
+            }
+            else
+                nums1[k--] = nums1[i] >= nums2[j]? nums1[i--] : nums2[j--];
+        }
+        return;
+    }
+};
+
+class Solution {
+public:
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i = m - 1, j = n - 1, tar = m + n - 1;
+        while (j >= 0) {
+            nums1[tar--] = i >= 0 && nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
+    }
+}
+}; 
+```
+
+
+
 ## 167. Two Sum II - Input array is sorted
 
 Easy
@@ -1881,6 +1971,137 @@ public:
 }
 };
 ```
+
+
+
+## 344. Reverse String
+
+Easy
+
+Write a function that reverses a string. The input string is given as an array of characters `char[]`.
+
+Do not allocate extra space for another array, you must do this by **modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm)** with O(1) extra memory.
+
+You may assume all the characters consist of [printable ascii characters](https://en.wikipedia.org/wiki/ASCII#Printable_characters).
+
+ 
+
+**Example 1:**
+
+```
+Input: ["h","e","l","l","o"]
+Output: ["o","l","l","e","h"]
+```
+
+**Example 2:**
+
+```
+Input: ["H","a","n","n","a","h"]
+Output: ["h","a","n","n","a","H"]
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int i = 0, j = s.size()-1;//two pointers
+        while(i < j)
+            swap(s[i++], s[j--]);
+    }
+};
+
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int i = 0, size = s.size(), halfSize = size/2, end = size-1;
+        while(i < halfSize)//one pointer
+        {            
+            swap(s[i++], s[end-i]);
+        }
+    }
+};
+```
+
+
+
+## 345. Reverse Vowels of a String
+
+Easy
+
+Write a function that takes a string as input and reverse only the vowels of a string.
+
+**Example 1:**
+
+```
+Input: "hello"
+Output: "holle"
+```
+
+**Example 2:**
+
+```
+Input: "leetcode"
+Output: "leotcede"
+```
+
+**Note:**
+The vowels does not include the letter "y".
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    string reverseVowels(string s) {
+        int i = 0, j = s.size()-1;
+        while(i < j)
+        {
+            if(IsVowels(s[i]) && IsVowels(s[j]))
+            {
+                swap(s[i++], s[j--]);
+                continue;
+            }                
+            if(!IsVowels(s[i]))
+                ++i;
+            if(!IsVowels(s[j]))
+                --j;
+        }
+        return s;
+    }
+private:
+    bool IsVowels(char c)
+    {
+        return c=='a' || c=='A'
+            || c=='e' || c=='E'
+            || c=='i' || c=='I' 
+            || c=='o' || c=='O' 
+            || c=='u' || c=='U' ;
+    }
+};
+```
+
+**Improve:** 
+
+```c++
+class Solution {
+public:
+    string reverseVowels(string s) {
+        int i = 0, j = s.size() - 1;
+        while (i < j) {
+            i = s.find_first_of("aeiouAEIOU", i);
+            j = s.find_last_of("aeiouAEIOU", j);
+            if (i < j) {
+                swap(s[i++], s[j--]);
+            }
+        }
+        return s;
+    }
+};
+```
+
+
 
 # Stack
 
