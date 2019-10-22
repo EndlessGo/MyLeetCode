@@ -72,6 +72,62 @@ public:
 
 
 
+## 3. Longest Substring Without Repeating Characters
+
+Medium
+
+Given a string, find the length of the **longest substring** without repeating characters.
+
+**Example 1:**
+
+```
+Input: "abcabcbb"
+Output: 3 
+Explanation: The answer is "abc", with the length of 3. 
+```
+
+**Example 2:**
+
+```
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+```
+
+**Example 3:**
+
+```
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3. 
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+```
+
+**Solution:** O(n) time.
+
+```c++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        vector<bool> appear(256, false);        
+        int size = s.size(), length = 0;
+        //s[i...j] store without repeating characters
+        int i = 0, j = -1;
+        while(i < size)
+        {
+            if(j+1 < size && !appear[s[j+1]])
+                appear[s[++j]] = true;
+            else//j+1 >= size || appear[s[++j]]
+                appear[s[i++]] = false;
+            length = max(length, j-i+1);
+        }
+        return length;
+    }
+};
+```
+
+
+
 ## 11. Container With Most Water
 
 Medium
@@ -1065,6 +1121,50 @@ public:
                 --right;
         }
         return res;
+    }
+};
+```
+
+## 209. Minimum Size Subarray Sum
+
+Medium
+
+Given an array of **n** positive integers and a positive integer **s**, find the minimal length of a **contiguous** subarray of which the sum ≥ **s**. If there isn't one, return 0 instead.
+
+**Example:** 
+
+```
+Input: s = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: the subarray [4,3] has the minimal length under the problem constraint.
+```
+
+**Follow up:**
+
+If you have figured out the *O*(*n*) solution, try coding another solution of which the time complexity is *O*(*n* log *n*). 
+
+**Solution:** O(n) time.
+
+```c++
+class Solution {
+public:
+    int minSubArrayLen(int s, vector<int>& nums) {
+        int size = nums.size();
+        int sum = 0, length = size+1;
+        //nums[i...j] store sum>=s
+        int i = 0, j = -1;
+        while(i < size)
+        {
+            if(j+1 < size && sum < s)
+                sum += nums[++j];
+            else//j+1 >= size || sum >= s
+                sum -= nums[i++];
+            if(sum >= s)
+                length = min(length, j-i+1);
+        }
+        if(length == size+1)
+            return 0;
+        return length;
     }
 };
 ```
