@@ -2196,6 +2196,72 @@ public:
 
 
 
+## 76. Minimum Window Substring
+
+Hard
+
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+**Example:**
+
+```
+Input: S = "ADOBECODEBANC", T = "ABC"
+Output: "BANC"
+```
+
+**Note:**
+
+- If there is no such window in S that covers all characters in T, return the empty string `""`.
+- If there is such window, you are guaranteed that there will always be only one unique minimum window in S.
+
+**Solution:** 
+
+```c++
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int sizeS = s.size(), sizeT = t.size();
+        string res;
+        if(s.empty() || t.empty() || sizeS < sizeT)
+            return res;
+        vector<int> freq(256, 0);//ascii
+        for(int i = 0; i < sizeT; ++i)
+            ++freq[t[i]];
+        int count = sizeT;
+        //s[l...r] store window
+        int l = 0, r = -1;
+        int minLength = sizeS+1;// minLength > sizeS
+        while(l <= sizeS-sizeT)
+        {
+            //cout<<"l="<<l<<" r="<<r<<endl;
+            if(count == 0)
+            {
+                if(r-l+1 < minLength)
+                {
+                    res = s.substr(l,r-l+1);
+                    minLength = r-l+1;
+                    //cout<<"res = "<<res<<endl;
+                }                
+                if(freq[s[l++]]++ >= 0)
+                    ++count;
+            }
+            else
+            {
+                if(r+1 < sizeS && freq[s[++r]]-- >= 1)
+                    --count;
+                else if(r+1 >= sizeS)//when r index is sizeS-1 and count != 0, dead while condition! need ++l!
+                    ++l;
+            }
+        }
+        return res;
+    }
+};
+```
+
+**Improve:**
+
+
+
 ## 125. Valid Palindrome
 
 Easy
@@ -2557,7 +2623,7 @@ public:
                 //p in s[l...r]
                 if(count == 0)
                     res.push_back(l);
-                if(freq[s[l++]-'a']++ >= 0)
+                if(freq[s[l++]-'a']++ >= 0)//cuz if c not in string t but appear in string s, freq[c] < 0
                     ++count;
             } 
         }
