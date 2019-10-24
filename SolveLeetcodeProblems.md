@@ -3256,6 +3256,433 @@ public:
 
 # Tree
 
+## 100. Same Tree
+
+Easy
+
+Given two binary trees, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical and the nodes have the same value.
+
+**Example 1:**
+
+```
+Input:     1         1
+          / \       / \
+         2   3     2   3
+
+        [1,2,3],   [1,2,3]
+
+Output: true
+```
+
+**Example 2:**
+
+```
+Input:     1         1
+          /           \
+         2             2
+
+        [1,2],     [1,null,2]
+
+Output: false
+```
+
+**Example 3:**
+
+```
+Input:     1         1
+          / \       / \
+         2   1     1   2
+
+        [1,2,1],   [1,1,2]
+
+Output: false
+```
+
+**Solution:**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p && q)
+        {
+            if(p->val != q->val)
+                return false;
+            return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+        }
+        return p==q;//p==NULL && q==NULL
+    }
+};
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p==NULL&&q==NULL) return true;
+        if(p==NULL) return false;
+        if(q==NULL) return false;
+        if(p->val!=q->val) return false;
+        return isSameTree(p->left,q->left)&&isSameTree(p->right,q->right);
+    }
+};
+```
+
+
+
+## 101. Symmetric Tree
+
+Easy
+
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree `[1,2,2,3,4,4,3]` is symmetric:
+
+```
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+```
+
+ 
+
+But the following `[1,2,2,null,3,null,3]` is not:
+
+```
+    1
+   / \
+  2   2
+   \   \
+   3    3
+```
+
+ 
+
+**Note:**
+Bonus points if you could solve it both recursively and iteratively.
+
+**Solution:**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if(root)
+            return isSymmetric(root->left, root->right);
+        return true;
+    }
+private:
+    bool isSymmetric(TreeNode* r1, TreeNode* r2) {
+        if(r1 && r2)
+        {
+            if(r1->val != r2->val)
+                return false;
+            return isSymmetric(r1->left, r2->right)
+                && isSymmetric(r1->right, r2->left);
+        }
+        return r1 == r2;//==NULL
+    }
+};
+
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if(root==NULL) return true;
+        return isMirror(root,root);
+    }
+    bool isMirror(TreeNode* t1,TreeNode* t2){
+        if(t1==NULL&&t2==NULL) return true;
+        if(t1==NULL||t2==NULL) return false;
+        return (t1->val==t2->val)&&isMirror(t1->left,t2->right)&&isMirror(t1->right,t2->left);
+    }
+};
+```
+
+
+
+## 104. Maximum Depth of Binary Tree
+
+Easy
+
+Given a binary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+**Note:** A leaf is a node with no children.
+
+**Example:**
+
+Given binary tree `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+return its depth = 3.
+
+**Solution:**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(!root)
+            return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+```
+
+## 111. Minimum Depth of Binary Tree
+
+Easy
+
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+**Note:** A leaf is a node with no children.
+
+**Example:**
+
+Given binary tree `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+return its minimum depth = 2.
+
+**Solution:**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root)//no node
+            return 0;
+        if(!root->left && !root->right)//leaf node
+            return 1;
+        int left = INT_MAX, right = INT_MAX;
+        if(root->left)
+            left = minDepth(root->left);
+        if(root->right)
+            right = minDepth(root->right);
+        return min(left, right) + 1;
+    }
+};
+
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root) return 0;
+        int nLeft = minDepth(root->left);
+        int nRight = minDepth(root->right);
+        if(nLeft==0) return nRight+1;
+        if(nRight==0) return nLeft+1;
+        return min(nLeft, nRight) + 1;
+    }
+};
+```
+
+
+
+## 222. Count Complete Tree Nodes
+
+Medium
+
+Given a **complete** binary tree, count the number of nodes.
+
+**Note:**
+
+**Definition of a complete binary tree from [Wikipedia](http://en.wikipedia.org/wiki/Binary_tree#Types_of_binary_trees):**
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+**Example:**
+
+```
+Input: 
+    1
+   / \
+  2   3
+ / \  /
+4  5 6
+
+Output: 6
+```
+
+**Solution:** time O(2^(h+1)), h: tree height or level, start from 0.
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(root)
+        {
+            //preOrder
+            ++count;
+            countNodes(root->left);//no need return cuz ++count change class data 'count'
+            countNodes(root->right);
+        }
+        return count;
+    }
+private:
+    int count = 0;
+};
+```
+
+**Improve:**  time O(logn * logn).
+
+```c++
+class Solution {
+public:
+    int countNodes(TreeNode* root) {        
+        if(!root)
+            return 0;
+        int hLeft = 0, hRight = 0;//hLeft: root down to the left side leaf node height
+        TreeNode *l = root, *r = root;
+        while(l) {++hLeft; l = l->left;}
+        while(r) {++hRight; r = r->right;}
+        //cout<<"root->val = "<<root->val<<" hl="<<hLeft<<" hr="<<hRight<<endl;
+        if(hLeft == hRight)//a perfect binary tree
+            return (1<<hLeft) - 1; //more faster
+            //return pow(2, hLeft) - 1;        
+        return 1+countNodes(root->left)+countNodes(root->right);
+    }
+};
+```
+
+
+
+## 226. Invert Binary Tree
+
+Easy
+
+Invert a binary tree.
+
+**Example:**
+
+Input:
+
+```
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+```
+
+Output:
+
+```
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+```
+
+**Trivia:**
+This problem was inspired by [this original tweet](https://twitter.com/mxcl/status/608682016205344768) by [Max Howell](https://twitter.com/mxcl):
+
+> Google: 90% of our engineers use the software you wrote (Homebrew), but you can’t invert a binary tree on a whiteboard so f*** off.
+
+**Solution:**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root)
+        {
+            swap(root->left, root->right);//top-down
+            invertTree(root->left);
+            invertTree(root->right);
+        }
+        return root;
+    }
+};
+
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root)
+        {            
+            invertTree(root->left);
+            invertTree(root->right);
+            swap(root->left, root->right);//bottom-up
+        }
+        return root;
+    }
+};
+```
+
+
+
 ## 559. Maximum Depth of N-ary Tree
 
 Easy
