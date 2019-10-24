@@ -3466,6 +3466,112 @@ public:
 };
 ```
 
+
+
+## 110. Balanced Binary Tree
+
+Easy
+
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as:
+
+> a binary tree in which the left and right subtrees of *every* node differ in height by no more than 1.
+
+ 
+
+**Example 1:**
+
+Given the following tree `[3,9,20,null,null,15,7]`:
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+Return true.
+
+**Example 2:**
+
+Given the following tree `[1,2,2,3,3,null,null,4,4]`:
+
+```
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+```
+
+Return false.
+
+**Solution:** top-down, time O(nlogn)
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        if(!root) return true;
+        return abs(maxDepth(root->left)-maxDepth(root->right)) <= 1 
+            && isBalanced(root->left)
+            && isBalanced(root->right);//every node
+    }
+private:
+    int maxDepth(TreeNode* root) {
+        if(!root) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+```
+
+**Improve:** bottom-up, time O(n)
+
+```c++
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        if(!root) return true;
+        return dfs(root) != -1;
+    }
+private:
+    //return max depth(>=0) if root is balanced, or -1 unbalanced
+    int dfs(TreeNode* root) {
+        if(!root) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        if(l == -1 || r == -1 || abs(l-r) > 1) return -1;//slower than top-down!
+        return max(l, r) + 1;
+    }
+};
+
+    //more faster cuz return early!
+    int dfs(TreeNode* root) {
+        if(!root) return 0;
+        int l = dfs(root->left);
+        if(l == -1) return -1;
+        int r = dfs(root->right);
+        if(r == -1) return -1;
+        if(abs(l-r) > 1) return -1;
+        return max(l, r) + 1;
+    }
+```
+
+
+
 ## 111. Minimum Depth of Binary Tree
 
 Easy
