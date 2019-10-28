@@ -32,9 +32,18 @@ The next 100 questions come from  www.leetcode.com.
 | 344. Reverse String                     |
 | 345. Reverse Vowels of a String         |
 
-
-
-
+| 2019.10.29~2019.11.4               |
+| :--------------------------------- |
+| 77. Combinations                   |
+| 100. Same Tree                     |
+| 101. Symmetric Tree                |
+| 125. Valid Palindrome              |
+| 209. Minimum Size Subarray Sum     |
+| 242. Valid Anagram                 |
+| 260. Single Number III             |
+| 283. Move Zeroes                   |
+| 349. Intersection of Two Arrays    |
+| 350. Intersection of Two Arrays II |
 
 
 
