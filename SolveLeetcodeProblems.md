@@ -1281,6 +1281,89 @@ private:
 
 
 
+## 242. Valid Anagram
+
+Easy
+
+Given two strings *s* and *t* , write a function to determine if *t* is an anagram of *s*.
+
+**Example 1:**
+
+```
+Input: s = "anagram", t = "nagaram"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: s = "rat", t = "car"
+Output: false
+```
+
+**Note:**
+You may assume the string contains only lowercase alphabets.
+
+**Follow up:**
+What if the inputs contain unicode characters? How would you adapt your solution to such case?
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        //space O(1), time O(n+m)
+        if(s.empty() && t.empty()) return true;
+        int sizeS = s.size(), sizeT = t.size();
+        if(sizeS != sizeT) return false;        
+        int times[256] = {0};
+        for(int i = 0; i < sizeS; ++i)
+            ++times[s[i]];
+        for(int i = 0; i < sizeT; ++i)
+        {
+            if(--times[t[i]] < 0)
+                return false;
+        }
+        return true;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        //space O(1), time O(n)
+        if(s.empty() && t.empty()) return true;
+        int sizeS = s.size(), sizeT = t.size();
+        if(sizeS != sizeT) return false;        
+        int times[256] = {0};
+        for(int i = 0; i < sizeS; ++i)
+        {
+            ++times[s[i]];
+            --times[t[i]];
+        }
+        for(int i = 0; i < sizeT; ++i)
+        {
+            if(times[t[i]] < 0)
+                return false;
+        }
+        return true;
+    }
+};
+```
+
+**Follow up:**
+
+```
+array size from ASCII 256 to Unicode xxx, add memory.
+```
+
+
+
 ## 283. Move Zeroes
 
 Easy
@@ -2650,6 +2733,220 @@ private:
 **Improve 3:** template solution for Sliding-Window-Algorithm!
 
  https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem. 
+
+
+
+# Map/Set/Hash Table
+
+## 349. Intersection of Two Arrays
+
+Easy
+
+Given two arrays, write a function to compute their intersection.
+
+**Example 1:**
+
+```
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+```
+
+**Example 2:**
+
+```
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+```
+
+**Note:**
+
+- Each element in the result must be unique.
+- The result can be in any order.
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        //space O(n), time O(n+m)
+        unordered_set<int> record(nums1.begin(), nums1.end());
+        unordered_set<int> result;
+        for(auto num: nums2)
+        {
+            if(record.find(num) != record.end())
+                result.insert(num);
+        }
+        vector<int> res(result.begin(), result.end());
+        return res;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        //space O(n+m), time O(min(n,m))
+        unordered_set<int> record1(nums1.begin(), nums1.end());
+        unordered_set<int> record2(nums2.begin(), nums2.end());
+        int size1 = record1.size(), size2 = record2.size();
+        if(size1 > size2)
+            swap(record1, record2);
+        
+        vector<int> result;
+        for(auto num: record1)
+        {
+            if(record2.find(num) != record2.end())
+                result.push_back(num);
+        }
+        return result;
+    }
+};
+```
+
+```c++
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        //space O(min(n,m)), time O(n+m)
+        int size1 = nums1.size(), size2 = nums2.size();
+        unordered_set<int> record;
+        if(size1 < size2)//not precise compare cuz may repeate
+            swap(nums1, nums2);
+        record.insert(nums2.begin(), nums2.end());
+        
+        unordered_set<int> result;
+        for(auto num: nums1)
+        {
+            if(record.find(num) != record.end())
+                result.insert(num);
+        }
+        vector<int> res(result.begin(), result.end());
+        return res;
+    }
+};
+```
+
+
+
+## 350. Intersection of Two Arrays II
+
+Easy
+
+Given two arrays, write a function to compute their intersection.
+
+**Example 1:**
+
+```
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2,2]
+```
+
+**Example 2:**
+
+```
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [4,9]
+```
+
+**Note:**
+
+- Each element in the result should appear as many times as it shows in both arrays.
+- The result can be in any order.
+
+**Follow up:**
+
+- What if the given array is already sorted? How would you optimize your algorithm?
+- What if *nums1*'s size is small compared to *nums2*'s size? Which algorithm is better?
+- What if elements of *nums2* are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        //space O(n), time O(n+m)
+        unordered_map<int/* number */, int/*count*/> record;
+        for(auto num: nums1)
+            ++record[num];
+        vector<int> result;
+        for(auto num: nums2)
+            if(record[num]-- > 0)
+                result.push_back(num);
+        return result;
+    }
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        //space O(min(n,m)), time O(n+m)
+        if(nums1.size() < nums2.size())
+            swap(nums1, nums2);
+        unordered_map<int/* number */, int/*count*/> record;
+        for(auto num: nums1)
+            ++record[num];
+        vector<int> result;
+        for(auto num: nums2)
+            if(record[num]-- > 0)
+                result.push_back(num);
+        return result;
+    }
+};
+```
+
+**Follow up 1:** two pointers.
+
+```c++
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        //space O(1), time O(max(nlogn,mlogm)), but this do not need us to do!
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+        
+        //space O(min(n,m)), time O(min(n,m))
+        int i = 0, size1 = nums1.size();
+        int j = 0, size2 = nums2.size();
+        vector<int> result;
+        while(i < size1 && j < size2)
+        {
+            if(nums1[i] == nums2[j])
+            {
+                result.push_back(nums1[i]);
+                ++i;++j;
+            }
+            else if(nums1[i] > nums2[j])
+                ++j;
+            else
+                ++i;
+        }
+        return result;
+    }
+};
+```
+
+**Follow up 2:**
+
+```
+n<m, improve time(m+n), follow up 1 time(n), so follow up 1 is better.
+```
+
+**Follow up 3:**
+
+```
+nums2 in file.in, load part of elements into memory and use solution.
+```
+
+
 
 
 
