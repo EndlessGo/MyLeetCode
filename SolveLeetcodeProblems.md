@@ -4557,7 +4557,7 @@ Output:
 ]
 ```
 
-**Solution 1:** 含义清晰的版本
+**Solution 1:**  enumerate numbers for a position! 对每一个位置选择不同数字来进行全排列！
 
 ```c++
 class Solution {
@@ -4566,17 +4566,17 @@ public:
         result.clear();
         visited.clear();
         visited.insert(visited.end(), nums.size(), false);
-        vector<int> temp;
-        findPermutations(nums, 0, temp);
+        vector<int> permutations;
+        findPermutations(nums, 0, permutations);
         return result;
     }
 private:
-    //temp存储已经排列好的元素，这一轮访问nums中索引为index的元素
-    //取出nums[index]放到temp结尾，对nums中剩下未被访问过的元素继续进行全排列
-    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
-        if(temp.size() == nums.size())
+    //permutations是一个有curNum个元素的全排列
+    //在nums中选择一个未被访问过的元素放入permutations，获得一个有curNum+1个元素的排列
+    void findPermutations(vector<int>& nums, int curNum, vector<int>& permutations) {
+        if(permutations.size() == nums.size())
         {
-            result.push_back(temp);
+            result.push_back(permutations);
             return;
         }
         for(int i = 0; i < nums.size(); ++i)
@@ -4584,9 +4584,9 @@ private:
             if(!visited[i])
             {
                 visited[i] = true;
-                temp.push_back(nums[i]);
-                findPermutations(nums, i, temp);
-                temp.pop_back();
+                permutations.push_back(nums[i]);
+                findPermutations(nums, curNum+1, permutations);
+                permutations.pop_back();
                 visited[i] = false;
             }
         }
@@ -4597,30 +4597,43 @@ private:
 };
 ```
 
-**Solution 2:** 含义清晰的版本，对于index的另一种理解和修改。
+**Solution 2:** enumerate positions for a number! 对每一个数字选择不同位置来进行去重全排列！
 
 ```c++
-    //temp中保存一个有index个元素的排列
-    //向这个排列的末尾添加第index+1个元素，获得一个有index+1个元素的排列
-    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
-        if(index == nums.size())
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        result.clear();
+        visited.clear();
+        visited.insert(visited.end(), nums.size(), false);
+        vector<int> permutations(nums.size());//different!
+        findPermutations(nums, 0, permutations);
+        return result;
+    }
+private:
+    //permutations是所有元素的一个全排列
+    //将nums[curIndex]放入path中未被访问过的位置，然后继续处理nums[curIndex+1]
+    void findPermutations(vector<int>& nums, int curIndex, vector<int>& permutations) {
+        if(curIndex == nums.size())
         {
-            result.push_back(temp);
+            result.push_back(permutations);
             return;
         }
-        for(int i = 0; i < nums.size(); ++i)
+        for(int i = 0; i < permutations.size(); ++i)
         {
             if(!visited[i])
             {
                 visited[i] = true;
-                temp.push_back(nums[i]);
-                findPermutations(nums, index+1, temp);
-                temp.pop_back();
+                permutations[i] = nums[curIndex];
+                findPermutations(nums, curIndex+1, permutations);
                 visited[i] = false;
             }
         }
         return;
     }
+    vector< vector<int> > result;
+    vector<bool> visited;
+};
 ```
 
 **Solution 3:** 交换的版本
@@ -4674,7 +4687,7 @@ Output:
 ]
 ```
 
-**Solution 1:** 概念清晰，由46不重复的全排列，加上排序和相邻前置访问判断。
+**Solution 1:** enumerate numbers for a position! 对每一个位置选择不同数字来进行去重全排列！
 
 ```c++
 class Solution {
@@ -4683,30 +4696,29 @@ public:
         result.clear();
         visited.clear();
         visited.insert(visited.end(), nums.size(), false);
-        vector<int> temp;
+        vector<int> path;
         sort(nums.begin(), nums.end());//关键
-        findPermutations(nums, 0, temp);
+        findPermutations(nums, 0, path);
         return result;
     }
 private:
-    //temp中保存一个有index个元素的排列
-    //向这个排列的末尾添加第index+1个元素，获得一个有index+1个元素的排列
-    //回溯到本轮，继续添加下一个index+1元素时，若其和前置nums元素相等且前置未被访问过，说明可以直接跳过
-    void findPermutations(vector<int>& nums, int index, vector<int>& temp) {
-        if(index == nums.size())
+    //path是一个有curNum个元素的全排列
+    //向path这个排列的末尾添加第curNum+1个元素，获得一个有curNum+1个元素的全排列
+    //添加第curNum+1个元素时，若其和前置nums元素相等且前置未被访问过，说明可以直接跳过
+    void findPermutations(vector<int>& nums, int curNum, vector<int>& path) {
+        if(curNum == nums.size())
         {
-            result.push_back(temp);
+            result.push_back(path);
             return;
         }
         for(int i = 0; i < nums.size(); ++i)
         {
-            if(visited[i])  continue;
+            if(visited[i])  continue;//visited[i]表示nums[i]是否被访问过
             if(i > 0 && nums[i] == nums[i-1] && !visited[i-1])  continue;//关键!visited[i]
-            //ohter
             visited[i] = true;
-            temp.push_back(nums[i]);
-            findPermutations(nums, index+1, temp);
-            temp.pop_back();
+            path.push_back(nums[i]);
+            findPermutations(nums, curNum+1, path);
+            path.pop_back();
             visited[i] = false;
         }
         return;
@@ -4716,7 +4728,51 @@ private:
 };
 ```
 
-**Solution 2:** 交换版本
+**Solution 2:** enumerate positions for a number! 对每一个数字选择不同位置来进行去重全排列！
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        result.clear();
+        visited.clear();
+        visited.insert(visited.end(), nums.size(), false);
+        vector<int> path(nums.size());//位置初始化！
+        sort(nums.begin(), nums.end());
+        findPermutations(nums, 0, 0, path);
+        return result;
+    }
+private:
+    //path保存元素的全排列
+    //将nums[curIndex]放入path中未被访问过的位置
+    //保证相对顺序，当nums[curIndex] == nums[curIndex+1]，则nums[curIndex+1]这个元素只能出现在nums[curIndex]元素的后面
+    void findPermutations(vector<int>& nums, int curIndex, int startPos, vector<int>& path) {
+        if(curIndex == nums.size())
+        {
+            result.push_back(path);
+            return;
+        }
+        for(int i = startPos; i < path.size(); ++i)
+        {
+            if(!visited[i])//表示path[i]是否被放入了元素
+            {
+                visited[i] = true;
+                path[i] = nums[curIndex];//nums[curIndex]放在了path[i]
+                if(curIndex+1 < nums.size() && nums[curIndex] == nums[curIndex+1])
+                    findPermutations(nums, curIndex+1, i+1, path);//nums[curIndex+1]只能放在了path[i+1]及之后
+                else
+                    findPermutations(nums, curIndex+1, 0, path);//nums[curIndex+1]能放在了path任意未被访问过的位置
+                visited[i] = false;
+            }
+        }
+        return;
+    }
+    vector< vector<int> > result;
+    vector<bool> visited;
+};
+```
+
+**Solution 3:** 交换版本
 
 ```c++
 class Solution {
