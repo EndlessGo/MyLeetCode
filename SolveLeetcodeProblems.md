@@ -2738,6 +2738,98 @@ private:
 
 # Map/Set/Hash Table
 
+## 205. Isomorphic Strings
+
+Easy
+
+Given two strings ***s\*** and ***t\***, determine if they are isomorphic.
+
+Two strings are isomorphic if the characters in ***s\*** can be replaced to get ***t\***.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
+
+**Example 1:**
+
+```
+Input: s = "egg", t = "add"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: s = "foo", t = "bar"
+Output: false
+```
+
+**Example 3:**
+
+```
+Input: s = "paper", t = "title"
+Output: true
+```
+
+**Note:**
+You may assume both ***s\*** and ***t\*** have the same length.
+
+**Solution:** 
+
+```c++
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {              
+        if(s.empty()) return true;
+        //size m = n, space O(n), time O(n)
+        unordered_map<char, char> s2t;
+        unordered_map<char, char> t2s;
+        for(int i = 0; i < s.size(); ++i)
+        {
+            if(s2t.find(s[i]) != s2t.end())
+            {
+                if(s2t[s[i]] != t[i])
+                    return false;
+            }
+            else
+                    s2t[s[i]] = t[i];
+            
+            if(t2s.find(t[i]) != t2s.end())
+            {
+                if(t2s[t[i]] != s[i])
+                    return false;
+            }
+            else
+                    t2s[t[i]] = s[i];
+                        
+        }
+        return true;
+    }
+};
+
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {              
+        if(s.empty()) return true;
+        //size m = n, space O(n), time O(n)
+        unordered_map<char, char> s2t;
+        unordered_map<char, char> t2s;
+        for(int i = 0; i < s.size(); ++i)
+        {
+            if(s2t[s[i]] == 0 && t2s[t[i]] == 0)
+            {
+                s2t[s[i]] = t[i];
+                t2s[t[i]] = s[i];
+                continue;
+            }            
+            if(s2t[s[i]] != t[i])//default mapping is ch->0
+                return false;
+        }
+        return true;
+    }
+};
+```
+
+
+
 ## 349. Intersection of Two Arrays
 
 Easy
@@ -2947,6 +3039,84 @@ nums2 in file.in, load part of elements into memory and use solution.
 ```
 
 
+
+### 451. Sort Characters By Frequency
+
+Medium
+
+Given a string, sort it in decreasing order based on the frequency of characters.
+
+**Example 1:**
+
+```
+Input:
+"tree"
+
+Output:
+"eert"
+
+Explanation:
+'e' appears twice while 'r' and 't' both appear once.
+So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+```
+
+
+
+**Example 2:**
+
+```
+Input:
+"cccaaa"
+
+Output:
+"cccaaa"
+
+Explanation:
+Both 'c' and 'a' appear three times, so "aaaccc" is also a valid answer.
+Note that "cacaca" is incorrect, as the same characters must be together.
+```
+
+
+
+**Example 3:**
+
+```
+Input:
+"Aabb"
+
+Output:
+"bbAa"
+
+Explanation:
+"bbaA" is also a valid answer, but "Aabb" is incorrect.
+Note that 'A' and 'a' are treated as two different characters.
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    string frequencySort(string s) {
+        //space O(n), time O(nlogn)
+        unordered_map<char, int> record;
+        for(int i = 0; i < s.size(); ++i)
+            ++record[s[i]];
+        vector< pair<char,int> > vec(record.begin(), record.end());
+        sort(vec.begin(), vec.end(), Compare);
+        string result;
+        for(auto p: vec)
+            result.insert(result.end(), p.second, p.first);
+        return result;
+    }
+private:
+    static bool Compare(const pair<char,int> &p1, const pair<char,int> &p2)
+    {
+        return p1.second > p2.second;
+    }    
+};
+
+```
 
 
 
