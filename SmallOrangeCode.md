@@ -45,5 +45,16 @@ The next 100 questions come from  www.leetcode.com.
 | 349. Intersection of Two Arrays    |
 | 350. Intersection of Two Arrays II |
 
-
+| 2019.11.5~2019.11.11                   |
+| :------------------------------------- |
+| 19. Remove Nth Node From End of  List  |
+| 21. Merge Two Sorted Lists             |
+| 24. Swap Nodes in Pairs                |
+| 61. Rotate List                        |
+| 83. Remove Duplicates from Sorted List |
+| 92. Reverse Linked List II             |
+| 147. Insertion Sort List               |
+| 203. Remove Linked List Elements       |
+| 206. Reverse Linked List               |
+| 237. Delete Node in a Linked List      |
 
