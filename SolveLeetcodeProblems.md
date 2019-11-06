@@ -2738,6 +2738,60 @@ private:
 
 # Map/Set/Hash Table
 
+## 202. Happy Number
+
+Easy
+
+Write an algorithm to determine if a number is "happy".
+
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+
+**Example:** 
+
+```
+Input: 19
+Output: true
+Explanation: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isHappy(int n) {
+        int result = n;
+        unordered_set<int> record;
+        while(result != 1)
+        {
+            record.insert(result);
+            result = CalSquareOfDigits(result);
+            if(record.find(result) != record.end())
+                return false;
+        }
+        return true;
+    }
+private:
+    int CalSquareOfDigits(int number)
+    {
+        int result = 0;
+        while(number)
+        {
+            int digit = number%10;
+            number/=10;
+            result += digit*digit;
+        }
+        return result;
+    }
+};
+```
+
+
+
 ## 205. Isomorphic Strings
 
 Easy
@@ -3040,7 +3094,7 @@ nums2 in file.in, load part of elements into memory and use solution.
 
 
 
-### 451. Sort Characters By Frequency
+## 451. Sort Characters By Frequency
 
 Medium
 
@@ -3664,6 +3718,139 @@ public:
     }
 };
 
+```
+
+
+
+## 258. Add Digits
+
+Easy
+
+Given a non-negative integer `num`, repeatedly add all its digits until the result has only one digit.
+
+**Example:**
+
+```
+Input: 38
+Output: 2 
+Explanation: The process is like: 3 + 8 = 11, 1 + 1 = 2. 
+             Since 2 has only one digit, return it.
+```
+
+**Follow up:**
+Could you do it without any loop/recursion in O(1) runtime?
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    int addDigits(int num) {
+        int result = num;
+        while(result >= 10)
+            result = AddDigits(result);
+        return result;
+    }
+private:
+    int AddDigits(int number)
+    {
+        int result = 0;
+        while(number)
+        {
+            int digit = number%10;
+            number/=10;
+            result += digit;
+        }
+        return result;
+    }    
+};
+```
+
+**Improve:**
+
+```c++
+class Solution {
+public:
+    int addDigits(int num) {
+        return (num-1)%9 + 1;
+    }  
+};
+```
+
+
+
+## 263. Ugly Number
+
+Easy
+
+Write a program to check whether a given number is an ugly number.
+
+Ugly numbers are **positive numbers** whose prime factors only include `2, 3, 5`.
+
+**Example 1:**
+
+```
+Input: 6
+Output: true
+Explanation: 6 = 2 × 3
+```
+
+**Example 2:**
+
+```
+Input: 8
+Output: true
+Explanation: 8 = 2 × 2 × 2
+```
+
+**Example 3:**
+
+```
+Input: 14
+Output: false 
+Explanation: 14 is not ugly since it includes another prime factor 7.
+```
+
+**Note:**
+
+1. `1` is typically treated as an ugly number.
+2. Input is within the 32-bit signed integer range: [−231, 231 − 1].
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool isUgly(int num) {
+        int result = num;
+        result = MoveFactor(result, 2);
+        result = MoveFactor(result, 3);
+        result = MoveFactor(result, 5);        
+        return result == 1;
+    }
+private:
+    int MoveFactor(int num, int factor)
+    {
+        //not check factor
+        int result = num;
+        while(result != 0 && result % factor == 0)
+        {
+            result /= factor;
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    bool isUgly(int num) {//判断是否为丑数
+        if(num<=0) return false;
+        for (int i=2; i<6 && num; i++)
+        while (num % i == 0)
+            num /= i;
+        return num == 1;
+    }
+};
 ```
 
 
