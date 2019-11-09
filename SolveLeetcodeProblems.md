@@ -2816,6 +2816,203 @@ private:
 
 # Map/Set/Hash Table
 
+## 15. 3Sum
+
+Medium
+
+Given an array `nums` of *n* integers, are there elements *a*, *b*, *c* in `nums` such that *a* + *b* + *c* = 0? Find all unique triplets in the array which gives the sum of zero.
+
+**Note:**
+
+The solution set must not contain duplicate triplets.
+
+**Example:**
+
+```
+Given array nums = [-1, 0, 1, 2, -1, -4],
+
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> result;
+        if(nums.empty()) return result;
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            //if(i > 0 && nums[i] == nums[i-1]) continue;//unique
+            int target = 0 - nums[i];
+            int front = i + 1, end = nums.size()-1;
+            //cout<<"i="<<i<<endl;
+            while(front < end)
+            {
+                int sum = nums[front] + nums[end];
+                if(sum == target)
+                {
+                    vector<int> triplets;
+                    triplets.push_back(nums[i]);
+                    triplets.push_back(nums[front++]);
+                    triplets.push_back(nums[end--]);
+                    result.push_back(triplets);
+                    while(front < end && nums[front] == triplets[1])
+                        ++front;
+                    while(front < end && nums[end] == triplets[2])
+                        --end;
+                }
+                else if (sum < target)
+                {
+                    ++front;
+                }
+                else// sum > target
+                {
+                    --end;
+                }
+               //cout<<"front="<<front<<" end="<<end<<endl;
+            }
+            while(i+1 < nums.size() && nums[i+1] == nums[i])
+                ++i;
+        }
+        return result;
+    }
+};
+```
+
+
+
+## 18. 4Sum
+
+Medium
+
+Given an array `nums` of *n* integers and an integer `target`, are there elements *a*, *b*, *c*, and *d* in `nums` such that *a* + *b* + *c* + *d* = `target`? Find all unique quadruplets in the array which gives the sum of `target`.
+
+**Note:**
+
+The solution set must not contain duplicate quadruplets.
+
+**Example:**
+
+```
+Given array nums = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+```
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        if(nums.empty()) return result;
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            for(int j = i+1; j < nums.size(); ++j)
+            {
+                int targetLeft = target - nums[i] - nums[j];
+                int front = j + 1, end = nums.size()-1;
+                while(front < end)
+                {
+                    int sum = nums[front] + nums[end];
+                    if(sum == targetLeft)
+                    {
+                        vector<int> quadruplets;
+                        quadruplets.push_back(nums[i]);
+                        quadruplets.push_back(nums[j]);
+                        quadruplets.push_back(nums[front++]);
+                        quadruplets.push_back(nums[end--]);
+                        result.push_back(quadruplets);
+                        while(front < end && nums[front] == quadruplets[2])
+                            ++front;
+                        while(front < end && nums[end] == quadruplets[3])
+                            --end;
+                    }
+                    else if (sum < targetLeft)
+                    {
+                        ++front;
+                    }
+                    else// sum > targetLeft
+                    {
+                        --end;
+                    }
+                }
+                while(j+1 < nums.size() && nums[j+1] == nums[j])
+                {
+                    ++j;//unique
+                }
+            }
+            while(i+1 < nums.size() && nums[i+1] == nums[i])
+            {
+                ++i;//unique
+            }            
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        if(nums.empty()) return result;
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            if(i > 0 && nums[i-1] == nums[i]) continue;
+            for(int j = i+1; j < nums.size(); ++j)
+            {
+                if(j > i+1 && nums[j-1] == nums[j]) continue;
+                int targetLeft = target - nums[i] - nums[j];
+                int front = j + 1, end = nums.size()-1;
+                while(front < end)
+                {
+                    int sum = nums[front] + nums[end];
+                    if(sum == targetLeft)
+                    {
+                        vector<int> quadruplets;
+                        quadruplets.push_back(nums[i]);
+                        quadruplets.push_back(nums[j]);
+                        quadruplets.push_back(nums[front++]);
+                        quadruplets.push_back(nums[end--]);
+                        result.push_back(quadruplets);
+                        while(front < end && nums[front] == quadruplets[2])
+                            ++front;
+                        while(front < end && nums[end] == quadruplets[3])
+                            --end;
+                    }
+                    else if (sum < targetLeft)
+                    {
+                        ++front;
+                    }
+                    else// sum > targetLeft
+                    {
+                        --end;
+                    }
+                }
+            }         
+        }
+        return result;
+    }
+};
+```
+
+
+
 ## 202. Happy Number
 
 Easy
