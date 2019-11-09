@@ -2003,6 +2003,84 @@ public:
 
 
 
+## 206. Reverse Linked List
+
+Easy
+
+Reverse a singly linked list.
+
+**Example:**
+
+```
+Input: 1->2->3->4->5->NULL
+Output: 5->4->3->2->1->NULL
+```
+
+**Follow up:**
+
+A linked list can be reversed either iteratively or recursively. Could you implement both?
+
+**Solution:** iteratively. 
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* pre= NULL;
+        ListNode* cur = head;
+        while(cur)
+        {
+            ListNode* next = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    }
+};
+```
+
+**Follow up:** recursively. 
+
+```c++
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head) return NULL;
+        ListNode* newHead = NULL;
+        ListNode* newTail = Recursive(head, newHead);
+        newTail->next = NULL;//remeber!!!
+        return newHead;
+    }
+private:
+    //Recursive函数将原链表的cur节点及后续节点反序
+    //返回新链表的尾结点，传入引用作为新头结点
+    ListNode* Recursive(ListNode* cur, ListNode* &newHead)
+    {
+        if(cur->next == NULL)
+        {
+            newHead = cur;
+        }
+        else
+        {
+            ListNode* newTail = Recursive(cur->next, newHead);
+            newTail->next = cur;
+        }
+        return cur;
+    }
+};
+```
+
+
+
 # String
 
 ## 8. String to Integer (atoi)
@@ -2879,6 +2957,115 @@ public:
         }
         return true;
     }
+};
+```
+
+
+
+## 290. Word Pattern
+
+Easy
+
+Given a `pattern` and a string `str`, find if `str` follows the same pattern.
+
+Here **follow** means a full match, such that there is a bijection between a letter in `pattern` and a **non-empty** word in `str`.
+
+**Example 1:**
+
+```
+Input: pattern = "abba", str = "dog cat cat dog"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input:pattern = "abba", str = "dog cat cat fish"
+Output: false
+```
+
+**Example 3:**
+
+```
+Input: pattern = "aaaa", str = "dog cat cat dog"
+Output: false
+```
+
+**Example 4:**
+
+```
+Input: pattern = "abba", str = "dog dog dog dog"
+Output: false
+```
+
+**Notes:**
+You may assume `pattern` contains only lowercase letters, and `str` contains lowercase letters that may be separated by a single space.
+
+**Solution:**
+
+```c++
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        if(pattern.empty() || str.empty()) return pattern.empty() && str.empty();
+        //size m = n, space O(n), time O(n)
+        unordered_map<char, string> c2s;
+        unordered_map<string, char> s2c;
+        string singleSpace = " ";
+        size_t pos = 0;
+        
+        for(int i = 0; i < pattern.size(); ++i)
+        {
+            if(pos == str.size()+1) return false;
+            size_t begin = pos;
+            pos = str.find_first_of(singleSpace, begin);
+            if(pos == -1) //pos= npos, substr [begin, pos) return [begin, size())
+                pos = str.size();
+            auto nextStr = str.substr(begin, pos-begin);//find next string in str, separeted by single space
+            ++pos;//next string in str!!!
+            cout<<"char[i]="<<pattern[i]<<"  nextStr="<<nextStr<<endl;
+            if(c2s[pattern[i]] == "" && s2c[nextStr] == 0)
+            {
+                c2s[pattern[i]] = nextStr;
+                s2c[nextStr] = pattern[i];
+                continue;
+            }            
+            if(c2s[pattern[i]] != nextStr)//default mapping is string->""
+                return false;
+        }
+        return pos == str.size() + 1;
+    }
+};
+```
+
+```c++
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        
+        stringstream ss(str);  // 字符流ss 
+        string buf;
+        vector<string> tokens;
+        while (ss >> buf)  
+            tokens.push_back(buf);
+        if(pattern.size() != tokens.size())
+            return false;
+        
+        map<string, char> s2c;
+        map<char, string> c2s;
+        for (int i = 0; i < tokens.size(); ++i) 
+        {
+            if (s2c[tokens[i]] == 0 && c2s[pattern[i]] == "") 
+            {
+                    s2c[tokens[i]] = pattern[i];
+                    c2s[pattern[i]] = tokens[i];
+                    continue;
+            }
+            if (s2c[tokens[i]] != pattern[i]) return false;
+        }
+        return true;
+}
+    
 };
 ```
 
