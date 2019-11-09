@@ -30,6 +30,17 @@ basic_string substr( size_type pos = 0,            size_type count = npos ) cons
 
 
 
+# stringstream
+
+## 1. stringstream
+
+```c++
+    stringstream ss(str);  // 字符流ss 
+    string buf;
+    vector<string> tokens;
+    while (ss >> buf)  //use single space as separate
+        tokens.push_back(buf);
+```
 # algorithm
 
 ## 1. std::copy
