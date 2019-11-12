@@ -58,3 +58,15 @@ The next 100 questions come from  www.leetcode.com.
 | 206. Reverse Linked List               |
 | 237. Delete Node in a Linked List      |
 
+| 2019.11.12~2019.11.18             |
+| :-------------------------------- |
+| 18. 4Sum                          |
+| 25. Reverse Nodes in k-Group      |
+| 143 Reorder List                  |
+| 148. Sort List                    |
+| 202. Happy Number                 |
+| 205. Isomorphic Strings           |
+| 217 Contains Duplicate            |
+| 219. Contains Duplicate II        |
+| 290. Word Pattern                 |
+| 451. Sort Characters By Frequency |
