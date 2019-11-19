@@ -70,3 +70,17 @@ The next 100 questions come from  www.leetcode.com.
 | 219. Contains Duplicate II        |
 | 290. Word Pattern                 |
 | 451. Sort Characters By Frequency |
+
+| 2019.11.19~2019.11.25                             |
+| :------------------------------------------------ |
+| 3. Longest Substring Without Repeating Characters |
+| 75. Sort Colors                                   |
+| 76. Minimum Window Substring                      |
+| 80. Remove Duplicates from Sorted Array II        |
+| 88. Merge Sorted Array                            |
+| 167. Two Sum II - Input array is sorted           |
+| 215. Kth Largest Element in an Array              |
+| 496. Next Greater Element I                       |
+| 503. Next Greater Element II                      |
+| 739. Daily Temperatures                           |
+
