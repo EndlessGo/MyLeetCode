@@ -84,3 +84,15 @@ The next 100 questions come from  www.leetcode.com.
 | 503. Next Greater Element II                      |
 | 739. Daily Temperatures                           |
 
+| 2019.11.26~2019.12.2                      |
+| :---------------------------------------- |
+| 5. Longest Palindromic Substring          |
+| 14. Longest Common Prefix                 |
+| 17. Letter Combinations of a Phone Number |
+| 19. Remove Nth Node From End of List      |
+| 22. Generate Parentheses                  |
+| 28. Implement strStr()                    |
+| 35. Search Insert Position                |
+| 38. Count and Say                         |
+| 41. First Missing Positive                |
+| 42. Trapping Rain Water                   |
