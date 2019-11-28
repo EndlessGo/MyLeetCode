@@ -400,6 +400,7 @@ Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
 class Solution {
 public:
     int romanToInt(string s) {
+        //time O(n), space O(1)
         int res = 0;
         for(int i = 0; i < s.size(); ++i)
         {
@@ -473,49 +474,24 @@ All given inputs are in lowercase letters `a-z`.
 class Solution {
 public:
     string longestCommonPrefix(vector<string>& strs) {
-        if (strs.empty())   return "";
-        string minSizeString(strs[0]);
-        for (auto str : strs)
+        //time O(m*n), space O(1)
+        if(strs.empty())
+            return "";
+        int count = 0;
+        while(count < strs[0].size())
         {
-            if(str.length() < minSizeString.length())
+            char tmp = strs[0][count];
+            for(int j = 1; j < strs.size(); ++j)
             {
-                minSizeString = str;
+                if(strs[j][count] != tmp)
+                    return strs[0].substr(0,count);
             }
+            ++count;
         }
-        int minCount = minSizeString.length();
-        for (auto str : strs)
-        {
-            int size = commonPrefixSizeOfTwoString(str, minSizeString);
-            if(size == 0)
-            {
-                return "";
-            }
-            else if (size < minCount)
-            {
-                minCount = size;
-            }
-        }
-        return minSizeString.substr(0, minCount);
-    }
-private:
-    int commonPrefixSizeOfTwoString(string str1, string str2)
-    {
-        int size = min(str1.length(), str2.length());
-        int i = 0;
-        while(i < size)
-        {
-            if (str1[i] != str2[i])
-                break;
-            ++i;
-        }
-        return i;
+        return strs[0];
     }
 };
-```
 
-**Improve:**
-
-```c++
 class Solution {
 public:
     string longestCommonPrefix(vector<string>& strs) {
