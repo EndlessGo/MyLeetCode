@@ -190,6 +190,7 @@ Assume we are dealing with an environment which could only store integers within
 class Solution {
 public:
     int reverse(int x) {
+        //time O(n), space O(1)
         long a = 0 ;
         while(x)
         {
@@ -203,6 +204,7 @@ public:
 class Solution {
 public:
     int reverse(int x) {
+        //time O(n), space O(n)
         char sign = x > 0? 1: -1;
         string str = to_string(x);
         //cout<<str<<endl;
