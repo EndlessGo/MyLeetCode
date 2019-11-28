@@ -25,30 +25,7 @@ return [0, 1].
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
-        unordered_map<int,int> valIndexMap;        
-        for (int i = 0; i < nums.size(); ++i)
-        {
-            auto iter = valIndexMap.find(target-nums[i]);
-            if (iter == valIndexMap.end())
-            {
-                valIndexMap.insert(pair<int,int>(nums[i],i));
-            }
-            else
-            {                   
-                return vector<int>{iter->second, i};
-            }
-        }
-        throw "no solution";
-    }
-};
-```
-
-**Improve:**
-
-```c++
-class Solution {
-public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+        //time O(n), space O(n)
         unordered_map<int,int> valIndexMap;
         int size = nums.size();
         auto end = valIndexMap.end();
