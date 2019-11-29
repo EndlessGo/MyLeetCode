@@ -959,32 +959,165 @@ For the purpose of this problem, we will return 0 when `needle` is an empty stri
 class Solution {
 public:
     int strStr(string haystack, string needle) {
+        //time O(n*m), space O(1)
         if (needle.empty()) return 0;
         int hsize = haystack.size(), nsize = needle.size();
-        if (nsize > hsize) return -1;
-        int i = 0, j = 0;
-        while (i < hsize && j < nsize)
+        for(int i = 0; i <= hsize-nsize; ++i)
         {
-            if (haystack[i] == needle[j])
+            int j = 0;
+            for(; j < nsize; ++j)
             {
-                ++i;
-                ++j;
+                if (haystack[i+j] != needle[j])
+                    break;
             }
-            else
-            {
-                i -= j;
-                j = 0;
-                ++i;
-            }
-        }        
-        if (j == nsize)
-            return i - j;
+            if (j == nsize)
+                return i;
+        }
         return -1;
     }
 };
 ```
 
-**Improved:**
+**Improved:** KMP
+
+```c++
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        //time O(n+m), space O(1)
+        if (needle.empty()) return 0;
+        vector<int> next = kmpProcess(needle);
+        int m = haystack.size(), n = needle.size();
+        for(int i = 0, j = 0; i < m;)
+        {
+            while(j < n && haystack[i] == needle[j])
+            {
+                ++i;++j;
+            }
+            if(j == n)
+                return i-j;            
+            //cout<<"j="<<j<<endl;
+            j ? j = next[j-1] : ++i;
+            //cout<<"i="<<i<<"j="<<j<<endl;
+        }
+        return -1;
+    }
+private:
+    vector<int> kmpProcess(string needle) {
+        int n = needle.size();
+        vector<int> next(n, 0);//next[i] means string needle match [0,i], when i+1 dismatch, the index next to be compared
+        for(int i = 0, j = 1; j < n;)
+        {
+            if(needle[j] == needle[i])
+                next[j++] = ++i;
+            else if(i)//if(needle[j] == needle[i] && i != 0)
+            {
+                i = next[i-1];
+            }
+            else//if(i == 0)
+                next[j++] = 0;
+        }
+        return next;
+    }
+};
+```
+
+
+
+## 38. Count and Say
+
+Easy
+
+The count-and-say sequence is the sequence of integers with the first five terms as following:
+
+```
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+```
+
+`1` is read off as `"one 1"` or `11`.
+`11` is read off as `"two 1s"` or `21`.
+`21` is read off as `"one 2`, then `one 1"` or `1211`.
+
+Given an integer *n* where 1 ≤ *n* ≤ 30, generate the *n*th term of the count-and-say sequence.
+
+Note: Each term of the sequence of integers will be represented as a string.
+
+ 
+
+**Example 1:**
+
+```
+Input: 1
+Output: "1"
+```
+
+**Example 2:**
+
+```
+Input: 4
+Output: "1211"
+```
+
+解释：
+
+Careercup has a same problem, I think its description is better:
+http://www.careercup.com/question?id=4425679
+
+"Count and Say problem" Write a code to do following:
+
+n String to print
+0 1
+1 1 1
+2 2 1
+3 1 2 1 1
+...
+Base case: n = 0 print "1"
+for n = 1, look at previous string and write number of times a digit is seen and the digit itself. In this case,
+
+digit 1 is seen 1 time in a row... so print "1 1"
+
+for n = 2, digit 1 is seen two times in a row, so print "2 1"
+
+for n = 3, digit 2 is seen 1 time and then digit 1 is seen 1 so print "1 2 1 1"
+
+for n = 4 you will print "1 1 1 2 2 1"
+
+Consider the numbers as integers for simplicity. e.g. if previous string is "10 1" then the next will be "1 10 1 1" and the next one will be "1 1 1 10 2 1"
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    string countAndSay(int n) {
+        if(1 <= n && n <= 5)
+            return init[n-1];
+        string res = init[init.size()-1];
+        for(int i = 6; i <= n; ++i)
+        {
+            string cur = "";
+            for(int j = 0; j < res.size(); ++j)
+            {
+                int count = 1;
+                while(j+1 < res.size() && res[j] == res[j+1])
+                {
+                    ++count;
+                    ++j;
+                }
+                cur += to_string(count) + res[j];
+            }
+            res = cur;
+        }
+        return res;
+    }
+private:
+    vector<string> init = {"1", "11", "21", "1211", "111221"};
+};
+```
 
 
 
