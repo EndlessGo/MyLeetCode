@@ -710,6 +710,58 @@ public:
 
 
 
+## 21. Merge Two Sorted Lists
+
+Easy
+
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+**Example:**
+
+```
+Input: 1->2->4, 1->3->4
+Output: 1->1->2->3->4->4
+```
+
+**Solution:**
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        //time O(n), space O(1)
+        ListNode dummyHead(0);
+        ListNode* cur = &dummyHead;
+        while(l1 && l2)
+        {
+            if(l1->val <= l2->val)
+            {
+                cur->next = l1;
+                l1 = l1->next;
+            }
+            else
+            {
+                cur->next = l2;
+                l2 = l2->next;                    
+            }
+            cur = cur->next;
+        }
+        cur->next = l1? l1:l2;
+        return dummyHead.next;
+    }
+};
+```
+
+
+
 ## 22. Generate Parentheses
 
 Medium
@@ -752,6 +804,121 @@ private:
         if (n > 0)
             backtrack(res, str+"(", n-1, m+1);
         return;
+    }
+};
+```
+
+
+
+## 26. Remove Duplicates from Sorted Array
+
+Easy
+
+Given a sorted array *nums*, remove the duplicates [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) such that each element appear only *once* and return the new length.
+
+Do not allocate extra space for another array, you must do this by **modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm)** with O(1) extra memory.
+
+**Example 1:**
+
+```
+Given nums = [1,1,2],
+
+Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+
+It doesn't matter what you leave beyond the returned length.
+```
+
+**Example 2:**
+
+```
+Given nums = [0,0,1,1,1,2,2,3,3,4],
+
+Your function should return length = 5, with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
+
+It doesn't matter what values are set beyond the returned length.
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        //time O(n), space O(1)
+        if(nums.empty()) return 0;
+        int count = 1, size = nums.size();//nums[0...count) store appear once element
+        for(int i = 1; i < size; ++i)
+        {
+            if(nums[i] != nums[i-1])
+            {
+                //if(i != count)
+                    nums[count++] = nums[i];
+                //else
+                    //++count;
+            }
+        }
+        return count;
+    }
+};
+```
+
+
+
+## 27. Remove Element
+
+Easy
+
+Given an array *nums* and a value *val*, remove all instances of that value [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) and return the new length.
+
+Do not allocate extra space for another array, you must do this by **modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm)** with O(1) extra memory.
+
+The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+
+**Example 1:**
+
+```
+Given nums = [3,2,2,3], val = 3,
+
+Your function should return length = 2, with the first two elements of nums being 2.
+
+It doesn't matter what you leave beyond the returned length.
+```
+
+**Example 2:**
+
+```
+Given nums = [0,1,2,2,3,0,4,2], val = 2,
+
+Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
+
+Note that the order of those five elements can be arbitrary.
+
+It doesn't matter what values are set beyond the returned length.
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        //time O(n), space O(1)
+        int count = 0, size = nums.size();
+        for (int i = 0; i < size; ++i)
+        {
+            if(nums[i] == val)
+            {
+                ++count;
+            }
+            else
+            {
+                //if(count)
+                //{
+                    nums[i-count] = nums[i];
+                //}
+            }
+        }
+        return size-count;
     }
 };
 ```
