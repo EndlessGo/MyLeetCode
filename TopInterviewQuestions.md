@@ -864,67 +864,6 @@ public:
 
 
 
-## 27. Remove Element
-
-Easy
-
-Given an array *nums* and a value *val*, remove all instances of that value [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) and return the new length.
-
-Do not allocate extra space for another array, you must do this by **modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm)** with O(1) extra memory.
-
-The order of elements can be changed. It doesn't matter what you leave beyond the new length.
-
-**Example 1:**
-
-```
-Given nums = [3,2,2,3], val = 3,
-
-Your function should return length = 2, with the first two elements of nums being 2.
-
-It doesn't matter what you leave beyond the returned length.
-```
-
-**Example 2:**
-
-```
-Given nums = [0,1,2,2,3,0,4,2], val = 2,
-
-Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
-
-Note that the order of those five elements can be arbitrary.
-
-It doesn't matter what values are set beyond the returned length.
-```
-
-**Solution**
-
-```c++
-class Solution {
-public:
-    int removeElement(vector<int>& nums, int val) {
-        //time O(n), space O(1)
-        int count = 0, size = nums.size();
-        for (int i = 0; i < size; ++i)
-        {
-            if(nums[i] == val)
-            {
-                ++count;
-            }
-            else
-            {
-                //if(count)
-                //{
-                    nums[i-count] = nums[i];
-                //}
-            }
-        }
-        return size-count;
-    }
-};
-```
-
-
-
 ## 28. Implement strStr()
 
 Easy
@@ -1273,7 +1212,8 @@ If you have figured out the O(*n*) solution, try coding another solution using t
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        //!nums.empty() always success
+        //time O(n), space O(1)
+        //nums.empty() always false
         int max_sum = INT_MIN, cur_sum = 0;
         for (auto num : nums)
         {
@@ -1294,11 +1234,34 @@ public:
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
+        //time O(n), space O(n)
+        //nums.empty() always false
         int size = nums.size(), res = INT_MIN;
-        vector<int> dp(size+1, INT_MIN);//dp[i] means the maximum subarray ending with nums[i-1];
-        for (int i = 1; i <= size; ++i)
+        //dp[i] means the maximum subarray ending with nums[i];
+        vector<int> dp(size, INT_MIN);
+        dp[0] = nums[0];
+        res = dp[0];
+        for (int i = 1; i < size; ++i)
         {
-            dp[i] = dp[i-1] >= 0 ? dp[i-1] + nums[i-1] : max(dp[i-1], nums[i-1]);
+            dp[i] = max(dp[i-1]+nums[i], nums[i]);//bug if { INT_MIN, -1 }
+            res = max(res, dp[i]);
+        }
+        return res;
+    }
+};
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        //time O(n), space O(n)
+        //nums.empty() always false
+        int size = nums.size(), res = INT_MIN;
+        //dp[i] means the maximum subarray ending with nums[i];
+        vector<int> dp(size, INT_MIN);
+        dp[0] = nums[0];
+        res = dp[0];
+        for (int i = 1; i < size; ++i)
+        {
+            dp[i] = dp[i-1] >= 0 ? dp[i-1]+nums[i] : max(dp[i-1], nums[i]);
             res = max(res, dp[i]);
         }
         return res;
@@ -1306,7 +1269,40 @@ public:
 };
 ```
 
-**Improve**: divide and conquer
+**Solution3**: divide and conquer
+
+```c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        //time O(nlogn), space O(1)
+        return findMaxInRange(nums, 0, nums.size()-1);
+    }
+private:
+    int findMaxInRange(vector<int>& nums, int begin, int end)
+    {
+        if(begin == end) return nums[begin];
+        if(begin > end) return INT_MIN;
+        int mid = begin+(end-begin)/2;
+        int leftMax = findMaxInRange(nums, begin, mid-1);
+        int rightMax = findMaxInRange(nums, mid+1, end);
+        int midLMax = 0, midRMax = 0;
+        for(int i = mid - 1, sum = 0; i >= begin; --i)
+        {
+            sum += nums[i];
+            if(midLMax < sum)
+                midLMax = sum;
+        }
+        for(int i = mid + 1, sum = 0; i <= end; ++i)
+        {
+            sum += nums[i];
+            if(midRMax < sum)
+                midRMax = sum;
+        }
+        return max(max(leftMax, rightMax), midLMax+midRMax+nums[mid]);
+    }
+};
+```
 
 
 
@@ -1382,23 +1378,21 @@ Output: [4,3,2,2]
 Explanation: The array represents the integer 4321.
 ```
 
+**Solution**
+
 ```c++
 class Solution {
 public:
     vector<int> plusOne(vector<int>& digits) {
-        //vector<int> res;
-        int size = digits.size();
         int carry = 1;
-        for (int i = size - 1; i >= 0; --i)
+        for (int i = digits.size() - 1; i >= 0; --i)
         {
             int sum = digits[i] + carry;
             digits[i] = sum % 10;
             carry = sum / 10;
         }
         if (carry)
-        {
             digits.insert(digits.begin(), carry);
-        }
         return digits;
     }
 };
@@ -1431,6 +1425,14 @@ Output: 2
 Explanation: The square root of 8 is 2.82842..., and since 
              the decimal part is truncated, 2 is returned.
 ```
+
+Hide Hint 1:
+
+ Try exploring all integers. (Credits: @annujoshi) 
+
+Hide Hint 2:
+
+ Use the sorted property of integers to reduced the search space. (Credits: @annujoshi) 
 
 **Solution:**
 
@@ -1467,13 +1469,62 @@ public:
             {
                 right = mid - 1;
             }
-            else 
+            else //if(mid <= x/mid)
             {
                 if (mid+1 > x/(mid + 1))
                     return mid;
                 left = mid + 1;
             }
         }
+    }
+};
+```
+
+
+
+## 70. Climbing Stairs
+
+Easy
+
+You are climbing a stair case. It takes *n* steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+**Note:** Given *n* will be a positive integer.
+
+**Example 1:**
+
+```
+Input: 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+```
+
+**Example 2:**
+
+```
+Input: 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    int climbStairs(int n) {
+        vector<int> dp(n+1,0);
+        dp[0] = 1;
+        dp[1] = 1;
+        for(int i = 2; i <= n; ++i)
+            dp[i] = dp[i-1]+dp[i-2];
+        return dp[n];
     }
 };
 ```
@@ -1594,6 +1645,43 @@ public:
             }
             if (col0) matrix[i][0] = 0;
         }
+        return;
+    }
+};
+```
+
+
+
+## 88. Merge Sorted Array
+
+Easy
+
+Given two sorted integer arrays *nums1* and *nums2*, merge *nums2* into *nums1* as one sorted array.
+
+**Note:**
+
+- The number of elements initialized in *nums1* and *nums2* are *m* and *n* respectively.
+- You may assume that *nums1* has enough space (size that is greater or equal to *m* + *n*) to hold additional elements from *nums2*.
+
+**Example:**
+
+```
+Input:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+Output: [1,2,2,3,5,6]
+```
+
+**Solution**
+
+```c++
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int i = m-1, j = n-1, k = m+n-1;
+        while(j >= 0)
+            nums1[k--] = i >= 0 && nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];        
         return;
     }
 };
