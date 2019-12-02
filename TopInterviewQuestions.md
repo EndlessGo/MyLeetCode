@@ -1735,7 +1735,7 @@ Bonus points if you could solve it both recursively and iteratively.
 class Solution {
 public:
     bool isSymmetric(TreeNode* root) {
-        //time O(logn), space O(logn)
+        //time O(n), space O(logn)
         return isSymmetric(root, root);
     }
 private:
@@ -1803,7 +1803,7 @@ return its depth = 3.
 class Solution {
 public:
     int maxDepth(TreeNode* root) {
-        //time O(logn), space O(logn)
+        //time O(n), space O(logn)
         if(!root) return 0;
         int left = maxDepth(root->left);
         int right = maxDepth(root->right);
@@ -1849,7 +1849,7 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
 class Solution {
 public:
     TreeNode* sortedArrayToBST(vector<int>& nums) {
-        //time O(logn), space O(logn)
+        //time O(n), space O(logn)
         return buildBST(nums, 0, nums.size()-1);
     }
 private:
