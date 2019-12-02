@@ -1689,6 +1689,187 @@ public:
 
 
 
+## 101. Symmetric Tree
+
+Easy
+
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree `[1,2,2,3,4,4,3]` is symmetric:
+
+```
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+```
+
+ 
+
+But the following `[1,2,2,null,3,null,3]` is not:
+
+```
+    1
+   / \
+  2   2
+   \   \
+   3    3
+```
+
+ 
+
+**Note:**
+Bonus points if you could solve it both recursively and iteratively.
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        //time O(logn), space O(logn)
+        return isSymmetric(root, root);
+    }
+private:
+    bool isSymmetric(TreeNode* t1, TreeNode* t2) {
+        if(t1 == NULL && t2 == NULL) return true;
+        if(t1 == NULL || t2 == NULL) return false;
+        return (t1->val==t2->val) && isSymmetric(t1->left,t2->right) && isSymmetric(t1->right,t2->left);
+    }
+};
+
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        //time O(n), space O(n)
+        if(root==NULL) return true;
+        queue<TreeNode*> queTree;
+        queTree.push(root);
+        queTree.push(root);
+        while(queTree.size())
+        {
+            TreeNode* t1 = queTree.front();
+            queTree.pop();
+            TreeNode* t2 = queTree.front();
+            queTree.pop();
+            if(t1==NULL&&t2==NULL) continue;
+            if(t1==NULL||t2==NULL) return false;
+            if(t1->val!=t2->val) return false;
+            queTree.push(t1->left);
+            queTree.push(t2->right);
+            queTree.push(t1->right);
+            queTree.push(t2->left);
+        }
+        return true;
+    }
+};
+```
+
+
+
+## 104. Maximum Depth of Binary Tree
+
+Easy
+
+Given a binary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+**Note:** A leaf is a node with no children.
+
+**Example:**
+
+Given binary tree `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+return its depth = 3.
+
+```c++
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        //time O(logn), space O(logn)
+        if(!root) return 0;
+        int left = maxDepth(root->left);
+        int right = maxDepth(root->right);
+        return (left>right?left:right)+1;
+    }
+};
+```
+
+
+
+## 108. Convert Sorted Array to Binary Search Tree
+
+Easy
+
+Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of *every* node never differ by more than 1.
+
+**Example:**
+
+```
+Given the sorted array: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+```
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        //time O(logn), space O(logn)
+        return buildBST(nums, 0, nums.size()-1);
+    }
+private:
+    //build BST from nums[begin,end], return root
+    TreeNode* buildBST(vector<int>& nums, int begin, int end)
+    {
+        if(begin == end)
+            return new TreeNode(nums[begin]);
+        if(begin>end) return NULL;
+        int mid = begin + (end-begin)/2;
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = buildBST(nums, begin, mid-1);
+        root->right = buildBST(nums, mid+1, end);
+        return root;
+    }
+};
+```
+
+
+
 ## 125. Valid Palindrome
 
 Easy
