@@ -2087,46 +2087,39 @@ Output: false
 class Solution {
 public:
     bool isPalindrome(string s) {
-        if (s.empty()) return true;
-        int left = 0, right = s.length()-1;
-        while(left < right)
+        //time O(n), space O(1)
+        for(int i = 0, j = s.size()-1; i < j;)
         {
-            while( !isAlphanumeric(s[left]) && left < right)
-                ++left;                
-            while( !isAlphanumeric(s[right]) && left < right)
-                --right;
-            if (tolower(s[left]) != tolower(s[right]))
+            if(isalnum(s[i]) && isalnum(s[j]))
+            {
+                if(tolower(s[i]) == tolower(s[j]))
+                {
+                    ++i;--j;
+                    continue;
+                }
                 return false;
-            ++left;
-            --right;
+            }
+            if(!isalnum(s[i]))
+                ++i;
+            if(!isalnum(s[j]))
+                --j;
         }
         return true;
     }
-private:
-    bool isAlphanumeric(char ch)
-    {
-        return (tolower(ch) >= 'a' && tolower(ch) <= 'z') || (ch >= '0'&& ch <= '9');
-    }
 };
-```
 
-**Improve:**
-
-```c++
 class Solution {
 public:
-    bool isPalindrome(string s) {
-    // Move 2 pointers from each end until they collide
-    for (int i = 0, j = s.size() - 1; i < j; i++, j--) {    
-        // Increment left pointer if not alphanumeric
-        while (isalnum(s[i]) == false && i < j) i++;    
-        // Decrement right pointer if no alphanumeric
-        while (isalnum(s[j]) == false && i < j) j--; 
-        // Exit and return error if not match
-        if (toupper(s[i]) != toupper(s[j])) return false; 
+    bool isPalindrome(string s) {        
+        //time O(n), space O(1)
+        for (int i = 0, j = s.size() - 1; i < j; ++i, --j) 
+        {
+            while (isalnum(s[i]) == false && i < j) i++;    
+            while (isalnum(s[j]) == false && i < j) j--; 
+            if (toupper(s[i]) != toupper(s[j])) return false; 
+        }
+        return true;
     }
-    return true;
-}
 };
 ```
 
@@ -2164,10 +2157,119 @@ public:
     int singleNumber(vector<int>& nums) {
         int res = 0;
         for (auto num: nums)
-        {
             res ^= num;
-        }
         return res;
+    }
+};
+```
+
+
+
+## 141. Linked List Cycle
+
+Easy
+
+Given a linked list, determine if it has a cycle in it.
+
+To represent a cycle in the given linked list, we use an integer `pos` which represents the position (0-indexed) in the linked list where tail connects to. If `pos` is `-1`, then there is no cycle in the linked list.
+
+ 
+
+**Example 1:**
+
+```
+Input: head = [3,2,0,-4], pos = 1
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+**Example 2:**
+
+```
+Input: head = [1,2], pos = 0
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+**Example 3:**
+
+```
+Input: head = [1], pos = -1
+Output: false
+Explanation: There is no cycle in the linked list.
+```
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+ 
+
+**Follow up:**
+
+Can you solve it using *O(1)* (i.e. constant) memory?
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //time O(n), space O(1)
+        ListNode* fast, *slow;
+        fast = slow = head;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //time O(n), space O(1)
+        ListNode* dummyHead = new ListNode(-1);
+        dummyHead->next = head;
+        ListNode* fast, *slow;
+        fast = slow = dummyHead;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //time O(n), space O(1)
+        ListNode* fast, *slow;
+        fast = slow = head;
+        while (fast && fast->next && fast->next->next && fast->next->next->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next->next->next;//fast = fast->next->next->next;// interesting! can be proved!
+            if (slow == fast)
+                return true;
+        }
+        return false;
     }
 };
 ```
