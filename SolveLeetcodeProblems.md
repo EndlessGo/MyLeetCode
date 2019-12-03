@@ -1943,8 +1943,6 @@ Explanation: There is no cycle in the linked list.
 
 Can you solve it using *O(1)* (i.e. constant) memory?
 
-**Solution 1:** normal find
-
 ```c++
 /**
  * Definition for singly-linked list.
@@ -1957,27 +1955,24 @@ Can you solve it using *O(1)* (i.e. constant) memory?
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        if(!head || !head->next)
-            return false;
-        ListNode* slow = head, *fast = head;
-        while(fast && fast->next)
-        {            
+        //time O(n), space O(1)
+        ListNode* fast, *slow;
+        fast = slow = head;
+        while (fast && fast->next)
+        {
             slow = slow->next;
             fast = fast->next->next;
-            if(slow == fast)
-                return true;            
+            if (slow == fast)
+                return true;
         }
         return false;
     }
 };
-```
 
-**Solution 2:** use dummy head
-
-```c++
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
+        //time O(n), space O(1)
         ListNode* dummyHead = new ListNode(-1);
         dummyHead->next = head;
         ListNode* fast, *slow;
@@ -1992,7 +1987,26 @@ public:
         return false;
     }
 };
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //time O(n), space O(1)
+        ListNode* fast, *slow;
+        fast = slow = head;
+        while (fast && fast->next && fast->next->next && fast->next->next->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next->next->next;//fast = fast->next->next->next;// interesting! can be proved!
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+};
 ```
+
+
 
 ## 142. Linked List Cycle II
 
@@ -3929,9 +3943,7 @@ public:
     int singleNumber(vector<int>& nums) {
         int res = 0;
         for (auto num: nums)
-        {
             res ^= num;
-        }
         return res;
     }
 };
