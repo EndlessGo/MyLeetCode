@@ -2390,6 +2390,98 @@ public:
 
 
 
+## 169. Majority Element
+
+Easy
+
+Given an array of size *n*, find the majority element. The majority element is the element that appears **more than** `⌊ n/2 ⌋` times.
+
+You may assume that the array is non-empty and the majority element always exist in the array.
+
+**Example 1:**
+
+```
+Input: [3,2,3]
+Output: 3
+```
+
+**Example 2:**
+
+```
+Input: [2,2,1,1,1,2,2]
+Output: 2
+```
+
+```c++
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        //time O(nlogn), space O(1)
+        sort(nums.begin(), nums.end());
+        return nums[nums.size()/2];
+    }
+};	
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        //time O(n), space O(n)
+        unordered_map<int, int> record;
+        for(auto num: nums)
+            ++record[num];
+        auto res = record.begin();
+        for(auto iter=record.begin(), end = record.end(); iter != end; ++iter)
+        {
+            if(iter->second > res->second)
+                res = iter;
+        }
+        return res->first;
+    }
+};
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        //time O(n), space O(1)
+        int major = nums[0], count = 1;
+        for(int i = 1; i < nums.size(); ++i)
+        {
+            if(!count)
+            {
+                ++count;
+                major = nums[i];
+            }
+            else if(nums[i] == major)
+                ++count;
+            else//if(nums[i] != major)
+                --count;
+            
+        }
+        return major;
+    }
+};
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        //time O(nlogn), space O(logn)
+        return majority(nums, 0, nums.size()-1);
+    }
+private:
+    int majority(vector<int>& nums, int l, int r) {
+        if(l == r)
+            return nums[l];
+        int mid = l + (r-l)/2;
+        int lm = majority(nums,l,mid), rm = majority(nums, mid+1, r);
+        if(lm == rm)
+            return lm;
+        return count(nums.begin()+l, nums.begin()+r+1, lm) > count(nums.begin()+l, nums.begin()+r+1, rm) ? lm : rm;
+    }
+};
+```
+
+
+
 ## 171. Excel Sheet Column Number
 
 Easy
@@ -2430,37 +2522,80 @@ Input: "ZY"
 Output: 701
 ```
 
-**Solution 1**
-
 ```c++
 class Solution {
 public:
     int titleToNumber(string s) {
         int size = s.size();
-        long long res = 0;
+        int res = 0;
         for(int i = 0; i < size; ++i)
-        {
-            res = 26*res + s[i]-'A'+1;
-        }
-        return (int)res;
+            res = 26*res + (s[i]-'A'+1);//may overflow, so use () or put first
+        return res;
     }
 };
-```
 
-**Solution 2**
+```
 
 ```c++
 class Solution {
 public:
     int titleToNumber(string s) {
         int col = 0;
-        for(int i = s.length(); i > 0; i--) {
-            col += (s[i - 1] - 'A' + 1) * pow(26, (s.length() - i));
+        for(int i = s.length()-1; i >= 0; i--) {             
+            col += (s[i] - 'A' + 1) * pow(26, (s.length()-1- i));
         }
         return col;
     }
 };
 
+```
+
+
+
+## 172. Factorial Trailing Zeroes
+
+Easy
+
+Given an integer *n*, return the number of trailing zeroes in *n*!.
+
+**Example 1:**
+
+```
+Input: 3
+Output: 0
+Explanation: 3! = 6, no trailing zero.
+```
+
+**Example 2:**
+
+```
+Input: 5
+Output: 1
+Explanation: 5! = 120, one trailing zero.
+```
+
+**Note:** Your solution should be in logarithmic time complexity.
+
+```c++
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int res = 0;
+        while(n)
+        {
+            n /= 5;
+            res += n;	
+        }
+        return res;
+    }
+};
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        return n ? n/5+trailingZeroes(n/5) : 0;
+    }
+};
 ```
 
 
