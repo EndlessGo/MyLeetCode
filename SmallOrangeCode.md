@@ -110,15 +110,16 @@ The next 100 questions come from  www.leetcode.com.
 | 86. Partition List      |
 | 91. Decode Ways         |
 
-| 2019.12.10~2019.12.16   |
-| :---------------------- |
-| 49. Group Anagrams      |
-| 50. Pow(x, n)           |
-| 58. Length of Last Word |
-| 62. Unique Paths        |
-| 64. Minimum Path Sum    |
-| 67. Add Binary          |
-| 69. Sqrt(x)             |
-| 71. Simplify Path       |
-| 86. Partition List      |
-| 91. Decode Ways         |
+| 2019.12.10~2019.12.16                           |
+| :---------------------------------------------- |
+| 94. Binary Tree Inorder Traversal               |
+| 102. Binary Tree Level Order Traversal          |
+| 103. Binary Tree Zigzag Level Order Traversal   |
+| 104. Maximum Depth of Binary Tree               |
+| 108. Convert Sorted Array to Binary Search Tree |
+| 118. Pascal's Triangle                          |
+| 121. Best Time to Buy and Sell Stock            |
+| 122. Best Time to Buy and Sell Stock II         |
+| 139. Word Break                                 |
+| 149. Max Points on a Line                       |
+
