@@ -109,3 +109,16 @@ The next 100 questions come from  www.leetcode.com.
 | 71. Simplify Path       |
 | 86. Partition List      |
 | 91. Decode Ways         |
+
+| 2019.12.10~2019.12.16   |
+| :---------------------- |
+| 49. Group Anagrams      |
+| 50. Pow(x, n)           |
+| 58. Length of Last Word |
+| 62. Unique Paths        |
+| 64. Minimum Path Sum    |
+| 67. Add Binary          |
+| 69. Sqrt(x)             |
+| 71. Simplify Path       |
+| 86. Partition List      |
+| 91. Decode Ways         |
