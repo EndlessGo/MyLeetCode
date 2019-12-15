@@ -2600,6 +2600,215 @@ public:
 
 
 
+## 189. Rotate Array
+
+Easy
+
+Given an array, rotate the array to the right by *k* steps, where *k* is non-negative.
+
+**Example 1:**
+
+```
+Input: [1,2,3,4,5,6,7] and k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]
+```
+
+**Example 2:**
+
+```
+Input: [-1,-100,3,99] and k = 2
+Output: [3,99,-1,-100]
+Explanation: 
+rotate 1 steps to the right: [99,-1,-100,3]
+rotate 2 steps to the right: [3,99,-1,-100]
+```
+
+**Note:**
+
+- Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+- Could you do it in-place with O(1) extra space?
+
+```c++
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(1)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        reverse(nums.begin(),nums.begin()+(n-k));
+        reverse(nums.begin()+(n-k),nums.end());
+        reverse(nums.begin(),nums.end());
+        return;
+    }
+};
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(1)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        reverse(nums.begin(),nums.end());
+        reverse(nums.begin(),nums.begin()+k);
+        reverse(nums.begin()+k,nums.end());        
+        return;
+    }
+};
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(n)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        nums.insert(nums.end(), nums.begin(),nums.begin()+(n-k));
+        nums.erase(nums.begin(),nums.begin()+(n-k));
+        return;
+    }
+};
+
+```
+
+
+
+## 190. Reverse Bits
+
+Easy
+
+Reverse bits of a given 32 bits unsigned integer.
+
+ 
+
+**Example 1:**
+
+```
+Input: 00000010100101000001111010011100
+Output: 00111001011110000010100101000000
+Explanation: The input binary string 00000010100101000001111010011100 represents the unsigned integer 43261596, so return 964176192 which its binary representation is 00111001011110000010100101000000.
+```
+
+**Example 2:**
+
+```
+Input: 11111111111111111111111111111101
+Output: 10111111111111111111111111111111
+Explanation: The input binary string 11111111111111111111111111111101 represents the unsigned integer 4294967293, so return 3221225471 which its binary representation is 10111111111111111111111111111111.
+```
+
+ 
+
+**Note:**
+
+- Note that in some languages such as Java, there is no unsigned integer type. In this case, both input and output will be given as signed integer type and should not affect your implementation, as the internal binary representation of the integer is the same whether it is signed or unsigned.
+- In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two's_complement). Therefore, in **Example 2** above the input represents the signed integer `-3` and the output represents the signed integer `-1073741825`.
+
+ 
+
+**Follow up**:
+
+If this function is called many times, how would you optimize it?
+
+```c++
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        //time O(bits), space O(1)
+        uint32_t result = 0;
+        for(int i = 0; i < 32; ++i)
+        {
+            result = (result << 1) + ((n >> i) & 1);
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        //time O(log(bits)), space O(1)
+        n = n >> 16 | n << 16;
+        n = (n & 0xFF00FF00) >> 8 | (n & 0x00FF00FF) << 8;
+        n = (n & 0xF0F0F0F0) >> 4 | (n & 0x0F0F0F0F) << 4;// abcd efgh --> efgh abcd
+        n = (n & 0xCCCCCCCC) >> 2 | (n & 0x33333333) << 2;// efgh abcd --> ghef cdab
+        n = (n & 0xAAAAAAAA) >> 1 | (n & 0x55555555) << 1;// ghef cdab --> hgfe dcba
+        return n;
+    }
+};
+```
+
+
+
+## 191. Number of 1 Bits
+
+Easy
+
+Write a function that takes an unsigned integer and return the number of '1' bits it has (also known as the [Hamming weight](http://en.wikipedia.org/wiki/Hamming_weight)).
+
+ 
+
+**Example 1:**
+
+```
+Input: 00000000000000000000000000001011
+Output: 3
+Explanation: The input binary string 00000000000000000000000000001011 has a total of three '1' bits.
+```
+
+**Example 2:**
+
+```
+Input: 00000000000000000000000010000000
+Output: 1
+Explanation: The input binary string 00000000000000000000000010000000 has a total of one '1' bit.
+```
+
+**Example 3:**
+
+```
+Input: 11111111111111111111111111111101
+Output: 31
+Explanation: The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.
+```
+
+ 
+
+**Note:**
+
+- Note that in some languages such as Java, there is no unsigned integer type. In this case, the input will be given as signed integer type and should not affect your implementation, as the internal binary representation of the integer is the same whether it is signed or unsigned.
+- In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two's_complement). Therefore, in **Example 3** above the input represents the signed integer `-3`.
+
+ 
+
+**Follow up**:
+
+If this function is called many times, how would you optimize it?
+
+```c++
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        //time O(1), space O(1)
+        int result = 0;
+        while(n)
+        {
+            ++result;
+            n &= (n-1);
+        }
+        return result;
+    }
+};
+```
+
+
+
 ## 283. Move Zeroes
 
 Easy
