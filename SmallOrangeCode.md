@@ -123,3 +123,15 @@ The next 100 questions come from  www.leetcode.com.
 | 139. Word Break                                 |
 | 149. Max Points on a Line                       |
 
+| 2019.12.17~2019.12.24                     |
+| :---------------------------------------- |
+| 153. Find Minimum in Rotated Sorted Array |
+| 155. Min Stack                            |
+| 160. Intersection of Two Linked Lists     |
+| 169. Majority Element                     |
+| 172. Factorial Trailing Zeroes            |
+| 173. Binary Search Tree Iterator          |
+| 189. Rotate Array                         |
+| 190. Reverse Bits                         |
+| 191. Number of 1 Bits                     |
+| 199. Binary Tree Right Side View          |
