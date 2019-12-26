@@ -2809,6 +2809,215 @@ public:
 
 
 
+## 198. House Robber
+
+Easy
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and **it will automatically contact the police if two adjacent houses were broken into on the same night**.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight **without alerting the police**.
+
+**Example 1:**
+
+```
+Input: [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+             Total amount you can rob = 1 + 3 = 4.
+```
+
+**Example 2:**
+
+```
+Input: [2,7,9,3,1]
+Output: 12
+Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+             Total amount you can rob = 2 + 9 + 1 = 12.
+```
+
+```c++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        //time O(n), space O(n^2)
+        int size = nums.size();
+        vector<int> dp(size, 0);//dp[i] means the maximum amout when rob nums[i] 
+        int result = 0;
+        for(int i = 0; i < size; ++i)
+        {
+            dp[i] = nums[i];
+            if(i >= 2)
+            {
+                int rangeMax = 0;
+                for(int j = 0; j <= i - 2; ++j)
+                    rangeMax = max(rangeMax, dp[j]);
+                dp[i] += rangeMax;
+            }                
+            result = max(result, dp[i]);
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        //time O(n), space O(n^2)
+        int n = nums.size();        
+        vector<int> memo(n,-1);////memo[i]：从i~n-1偷到的最大物品价值
+        memo[n-1]=nums[n-1];//init
+        for(int i=n-2;i>=0;i--){
+            for(int j=i;j<n;j++){
+                memo[i]=max( memo[i],nums[j]+(j+2<=n-1?memo[j+2]:0) );
+            }
+        }
+        return memo[0];
+    }
+};
+
+TODO: https://leetcode.com/problems/house-robber/discuss/156523/From-good-to-great.-How-to-approach-most-of-DP-problems.
+```
+
+
+
+## 202. Happy Number
+
+Easy
+
+Write an algorithm to determine if a number is "happy".
+
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+
+**Example:** 
+
+```
+Input: 19
+Output: true
+Explanation: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+```
+
+```c++
+class Solution {
+public:
+    bool isHappy(int n) {
+        //time O(?), space O(?)
+        if(record.find(n) != record.end())
+            return false;
+        int next = Cal(n);
+        if(next == 1) return true;
+        record.insert(n);
+        return isHappy(next);
+    }
+private:
+    int Cal(int n)
+    {
+        int result = 0;
+        while(n)
+        {            
+            result += (n % 10)*(n % 10);
+            n /= 10;
+        }
+        return result;
+    }
+    set<int> record;
+};
+
+class Solution {
+public:
+    bool isHappy(int n) {
+        //time O(?), space O(1)
+        int slow, fast;
+        slow = fast = n;
+        do {
+            slow = digitSquareSum(slow);
+            fast = digitSquareSum(fast);
+            fast = digitSquareSum(fast);
+            if(fast == 1) return 1;
+        } while(slow != fast);
+         return 0;
+    }
+private:
+    int digitSquareSum(int n)
+    {
+        int result = 0;
+        while(n)
+        {            
+            result += (n % 10)*(n % 10);
+            n /= 10;
+        }
+        return result;
+    }
+};
+```
+
+
+
+## 204. Count Primes
+
+Easy
+
+Count the number of prime numbers less than a non-negative number, ***n\***.
+
+**Example:**
+
+```
+Input: 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+```
+
+```c++
+class Solution {
+public:
+    int countPrimes(int n) {
+        //time O(n^1.5), space O(1)
+        int count = 0;
+        for (int i = 1; i < n; i++) {
+            if (isPrime(i)) count++;
+        }
+        return count;
+    }
+private:
+    bool isPrime(int num) {
+        if (num <= 1) return false;
+        // Loop's ending condition is i * i <= num instead of i <= sqrt(num)
+        // to avoid repeatedly calling an expensive function sqrt().
+        for (int i = 2; i * i <= num; i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+};
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        //time O(nloglogn), space O(n)
+        vector<bool> isPrime(n, true);//isPrime[i] means i is or not a prime number, actually 0 and 1 are false
+        //less than n, not less equal
+        for (int i = 2; i * i < n; i++) {
+          if (!isPrime[i]) continue;
+          for (int j = i * i; j < n; j += i) {
+             isPrime[j] = false;
+          }
+        } 
+        int count = 0;
+        for (int i = 2; i < n; i++) {
+            if (isPrime[i]) ++count;
+        }
+        return count;
+    }
+};
+```
+
+
+
 ## 283. Move Zeroes
 
 Easy
