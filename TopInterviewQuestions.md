@@ -2600,6 +2600,424 @@ public:
 
 
 
+## 189. Rotate Array
+
+Easy
+
+Given an array, rotate the array to the right by *k* steps, where *k* is non-negative.
+
+**Example 1:**
+
+```
+Input: [1,2,3,4,5,6,7] and k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]
+```
+
+**Example 2:**
+
+```
+Input: [-1,-100,3,99] and k = 2
+Output: [3,99,-1,-100]
+Explanation: 
+rotate 1 steps to the right: [99,-1,-100,3]
+rotate 2 steps to the right: [3,99,-1,-100]
+```
+
+**Note:**
+
+- Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+- Could you do it in-place with O(1) extra space?
+
+```c++
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(1)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        reverse(nums.begin(),nums.begin()+(n-k));
+        reverse(nums.begin()+(n-k),nums.end());
+        reverse(nums.begin(),nums.end());
+        return;
+    }
+};
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(1)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        reverse(nums.begin(),nums.end());
+        reverse(nums.begin(),nums.begin()+k);
+        reverse(nums.begin()+k,nums.end());        
+        return;
+    }
+};
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //time O(n),sapce O(n)
+        if(nums.empty()) return;
+        int n = nums.size();
+        k %= n;
+        if(k == 0) return;
+        nums.insert(nums.end(), nums.begin(),nums.begin()+(n-k));
+        nums.erase(nums.begin(),nums.begin()+(n-k));
+        return;
+    }
+};
+
+```
+
+
+
+## 190. Reverse Bits
+
+Easy
+
+Reverse bits of a given 32 bits unsigned integer.
+
+ 
+
+**Example 1:**
+
+```
+Input: 00000010100101000001111010011100
+Output: 00111001011110000010100101000000
+Explanation: The input binary string 00000010100101000001111010011100 represents the unsigned integer 43261596, so return 964176192 which its binary representation is 00111001011110000010100101000000.
+```
+
+**Example 2:**
+
+```
+Input: 11111111111111111111111111111101
+Output: 10111111111111111111111111111111
+Explanation: The input binary string 11111111111111111111111111111101 represents the unsigned integer 4294967293, so return 3221225471 which its binary representation is 10111111111111111111111111111111.
+```
+
+ 
+
+**Note:**
+
+- Note that in some languages such as Java, there is no unsigned integer type. In this case, both input and output will be given as signed integer type and should not affect your implementation, as the internal binary representation of the integer is the same whether it is signed or unsigned.
+- In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two's_complement). Therefore, in **Example 2** above the input represents the signed integer `-3` and the output represents the signed integer `-1073741825`.
+
+ 
+
+**Follow up**:
+
+If this function is called many times, how would you optimize it?
+
+```c++
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        //time O(bits), space O(1)
+        uint32_t result = 0;
+        for(int i = 0; i < 32; ++i)
+        {
+            result = (result << 1) + ((n >> i) & 1);
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        //time O(log(bits)), space O(1)
+        n = n >> 16 | n << 16;
+        n = (n & 0xFF00FF00) >> 8 | (n & 0x00FF00FF) << 8;
+        n = (n & 0xF0F0F0F0) >> 4 | (n & 0x0F0F0F0F) << 4;// abcd efgh --> efgh abcd
+        n = (n & 0xCCCCCCCC) >> 2 | (n & 0x33333333) << 2;// efgh abcd --> ghef cdab
+        n = (n & 0xAAAAAAAA) >> 1 | (n & 0x55555555) << 1;// ghef cdab --> hgfe dcba
+        return n;
+    }
+};
+```
+
+
+
+## 191. Number of 1 Bits
+
+Easy
+
+Write a function that takes an unsigned integer and return the number of '1' bits it has (also known as the [Hamming weight](http://en.wikipedia.org/wiki/Hamming_weight)).
+
+ 
+
+**Example 1:**
+
+```
+Input: 00000000000000000000000000001011
+Output: 3
+Explanation: The input binary string 00000000000000000000000000001011 has a total of three '1' bits.
+```
+
+**Example 2:**
+
+```
+Input: 00000000000000000000000010000000
+Output: 1
+Explanation: The input binary string 00000000000000000000000010000000 has a total of one '1' bit.
+```
+
+**Example 3:**
+
+```
+Input: 11111111111111111111111111111101
+Output: 31
+Explanation: The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.
+```
+
+ 
+
+**Note:**
+
+- Note that in some languages such as Java, there is no unsigned integer type. In this case, the input will be given as signed integer type and should not affect your implementation, as the internal binary representation of the integer is the same whether it is signed or unsigned.
+- In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two's_complement). Therefore, in **Example 3** above the input represents the signed integer `-3`.
+
+ 
+
+**Follow up**:
+
+If this function is called many times, how would you optimize it?
+
+```c++
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        //time O(1), space O(1)
+        int result = 0;
+        while(n)
+        {
+            ++result;
+            n &= (n-1);
+        }
+        return result;
+    }
+};
+```
+
+
+
+## 198. House Robber
+
+Easy
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and **it will automatically contact the police if two adjacent houses were broken into on the same night**.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight **without alerting the police**.
+
+**Example 1:**
+
+```
+Input: [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+             Total amount you can rob = 1 + 3 = 4.
+```
+
+**Example 2:**
+
+```
+Input: [2,7,9,3,1]
+Output: 12
+Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+             Total amount you can rob = 2 + 9 + 1 = 12.
+```
+
+```c++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        //time O(n), space O(n^2)
+        int size = nums.size();
+        vector<int> dp(size, 0);//dp[i] means the maximum amout when rob nums[i] 
+        int result = 0;
+        for(int i = 0; i < size; ++i)
+        {
+            dp[i] = nums[i];
+            if(i >= 2)
+            {
+                int rangeMax = 0;
+                for(int j = 0; j <= i - 2; ++j)
+                    rangeMax = max(rangeMax, dp[j]);
+                dp[i] += rangeMax;
+            }                
+            result = max(result, dp[i]);
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        //time O(n), space O(n^2)
+        int n = nums.size();        
+        vector<int> memo(n,-1);////memo[i]：从i~n-1偷到的最大物品价值
+        memo[n-1]=nums[n-1];//init
+        for(int i=n-2;i>=0;i--){
+            for(int j=i;j<n;j++){
+                memo[i]=max( memo[i],nums[j]+(j+2<=n-1?memo[j+2]:0) );
+            }
+        }
+        return memo[0];
+    }
+};
+
+TODO: https://leetcode.com/problems/house-robber/discuss/156523/From-good-to-great.-How-to-approach-most-of-DP-problems.
+```
+
+
+
+## 202. Happy Number
+
+Easy
+
+Write an algorithm to determine if a number is "happy".
+
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+
+**Example:** 
+
+```
+Input: 19
+Output: true
+Explanation: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+```
+
+```c++
+class Solution {
+public:
+    bool isHappy(int n) {
+        //time O(?), space O(?)
+        if(record.find(n) != record.end())
+            return false;
+        int next = Cal(n);
+        if(next == 1) return true;
+        record.insert(n);
+        return isHappy(next);
+    }
+private:
+    int Cal(int n)
+    {
+        int result = 0;
+        while(n)
+        {            
+            result += (n % 10)*(n % 10);
+            n /= 10;
+        }
+        return result;
+    }
+    set<int> record;
+};
+
+class Solution {
+public:
+    bool isHappy(int n) {
+        //time O(?), space O(1)
+        int slow, fast;
+        slow = fast = n;
+        do {
+            slow = digitSquareSum(slow);
+            fast = digitSquareSum(fast);
+            fast = digitSquareSum(fast);
+            if(fast == 1) return 1;
+        } while(slow != fast);
+         return 0;
+    }
+private:
+    int digitSquareSum(int n)
+    {
+        int result = 0;
+        while(n)
+        {            
+            result += (n % 10)*(n % 10);
+            n /= 10;
+        }
+        return result;
+    }
+};
+```
+
+
+
+## 204. Count Primes
+
+Easy
+
+Count the number of prime numbers less than a non-negative number, ***n\***.
+
+**Example:**
+
+```
+Input: 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+```
+
+```c++
+class Solution {
+public:
+    int countPrimes(int n) {
+        //time O(n^1.5), space O(1)
+        int count = 0;
+        for (int i = 1; i < n; i++) {
+            if (isPrime(i)) count++;
+        }
+        return count;
+    }
+private:
+    bool isPrime(int num) {
+        if (num <= 1) return false;
+        // Loop's ending condition is i * i <= num instead of i <= sqrt(num)
+        // to avoid repeatedly calling an expensive function sqrt().
+        for (int i = 2; i * i <= num; i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+};
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        //time O(nloglogn), space O(n)
+        vector<bool> isPrime(n, true);//isPrime[i] means i is or not a prime number, actually 0 and 1 are false
+        //less than n, not less equal
+        for (int i = 2; i * i < n; i++) {
+          if (!isPrime[i]) continue;
+          for (int j = i * i; j < n; j += i) {
+             isPrime[j] = false;
+          }
+        } 
+        int count = 0;
+        for (int i = 2; i < n; i++) {
+            if (isPrime[i]) ++count;
+        }
+        return count;
+    }
+};
+```
+
+
+
 ## 283. Move Zeroes
 
 Easy
