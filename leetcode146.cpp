@@ -54,3 +54,55 @@ private:
  * int param_1 = obj->get(key);
  * obj->put(key,value);
  */
+class LRUCache {
+    public:
+    class Node{
+        public:
+        int key,value;
+        Node *next,*prev;
+    };
+    int cap;
+    Node *head=new Node(),*tail=new Node();
+    unordered_map<int,Node*> mp;
+    LRUCache(int capacity) {
+        cap=capacity;
+        head->next=tail;
+        tail->prev=head;
+    }
+    void remove(Node *ptr) {
+        (ptr->next)->prev=ptr->prev;
+        (ptr->prev)->next=ptr->next;
+    }
+    void make(Node *ptr) {
+        ptr->next=head->next;
+        head->next->prev=ptr;
+        ptr->prev=head;
+        head->next=ptr;
+    }
+    void put(int key,int value) {
+        if(mp.find(key)!=mp.end()) {
+            Node *ptr=mp[key];
+            remove(ptr);
+            ptr->value=value;
+            make(ptr);
+        }
+        else {
+            if(mp.size()==cap) {
+                mp.erase(tail->prev->key);
+                remove(tail->prev);
+            }
+            Node *ptr=new Node();
+            ptr->key=key;
+            ptr->value=value;
+            make(ptr);
+            mp[key]=ptr;
+        }
+    }
+    int get(int key) {
+        if(mp.find(key)==mp.end()) return -1;
+        Node *ptr=mp[key];
+        remove(ptr);
+        make(ptr);
+        return ptr->value;
+    }
+};
