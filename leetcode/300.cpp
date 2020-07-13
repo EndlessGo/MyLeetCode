@@ -23,3 +23,24 @@ public:
         return ret;
     }
 };
+
+//2. DP+二分查找
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        //time O(nlogn), space O(n)
+        vector<int> tails(nums.size(), 0);
+        int res = 0;
+        for(int num : nums) {
+            int i = 0, j = res;
+            while(i < j) {
+                int m = (i + j) / 2;
+                if(tails[m] < num) i = m + 1;
+                else j = m;
+            }
+            tails[i] = num;
+            if(res == j) res++;
+        }
+        return res;
+    }
+};
